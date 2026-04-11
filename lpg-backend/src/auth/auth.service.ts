@@ -31,12 +31,6 @@ export class AuthService {
     });
     if (!user) throw new UnauthorizedException('Email Tidak Terdaftar');
 
-    if (data.role && user.role !== data.role) {
-      throw new UnauthorizedException(
-        'Anda tidak memiliki akses untuk role ini',
-      );
-    }
-
     const isMatch = await bcrypt.compare(data.password, user.password);
     if (!isMatch) throw new UnauthorizedException('Password Salah!');
 
