@@ -15,8 +15,8 @@ model User {
   role              Role      @default(USER)
   isVerified        Boolean   @default(false)
   verificationCode  String?
-  resetToken        String?   @unique
-  resetTokenExpires DateTime?
+  resetPasswordOtp  String?
+  resetOtpExpires DateTime?
   phone             String?
   avatarUrl         String?
   createdAt         DateTime  @default(now())
