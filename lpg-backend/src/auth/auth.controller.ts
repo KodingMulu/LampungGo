@@ -23,7 +23,6 @@ export class AuthController {
 
   @Post('login')
   login(@Body() body: LoginDto) {
-    console.log('Body yang masuk:', body);
     return this.authService.login(body);
   }
 
