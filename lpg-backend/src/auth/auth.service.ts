@@ -7,7 +7,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import * as crypto from 'crypto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -125,27 +124,27 @@ export class AuthService {
     });
     if (!user) throw new NotFoundException('Email tidak terdaftar');
 
-    const token = crypto.randomBytes(32).toString('hex');
-    const expires = new Date(Date.now() + 3600000);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 15 * 60000);
 
     await this.prisma.user.update({
       where: {
         email,
       },
       data: {
-        resetToken: token,
-        resetTokenExpires: expires,
+        resetPasswordOtp: otp,
+        resetOtpExpires: expires,
       },
     });
 
     await this.mailerService.sendMail({
       to: email,
       subject: 'Reset Password LampungGo',
-      text: `Gunakan token ini untuk reset password: ${token}`,
+      text: `Kode OTP reset password Anda adalah: ${otp}. Kode ini berlaku selama 15 menit.`,
     });
 
     return {
-      message: 'Link reset password telah dikirim ke email.',
+      message: 'Kode OTP telah dikirim ke email',
     };
   }
 
