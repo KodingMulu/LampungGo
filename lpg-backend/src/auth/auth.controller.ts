@@ -36,4 +36,9 @@ export class AuthController {
   getProfile(@Request() req: AuthRequest) {
     return req.user;
   }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() body: { email: string }) {
+    return this.authService.forgotPassword(body.email);
+  }
 }

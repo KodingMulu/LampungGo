@@ -1,11 +1,13 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -18,6 +20,10 @@ export class AuthService {
     private mailerService: MailerService,
   ) {}
 
+  /**
+   * Register With OTP
+   * Sending OTP to mail user using nodemailer
+   */
   async register(data: RegisterDto) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -42,6 +48,10 @@ export class AuthService {
     };
   }
 
+  /**
+   * Verify Code OTP
+   * Verify code sending to mail user
+   */
   async verify(email: string, code: string) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -69,6 +79,9 @@ export class AuthService {
     };
   }
 
+  /**
+   * Login with data user verified
+   */
   async login(data: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -97,6 +110,42 @@ export class AuthService {
         name: user.name,
         role: user.role,
       },
+    };
+  }
+
+  /**
+   * Forgot password
+   * sending otp to email
+   */
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (!user) throw new NotFoundException('Email tidak terdaftar');
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = new Date(Date.now() + 3600000);
+
+    await this.prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        resetToken: token,
+        resetTokenExpires: expires,
+      },
+    });
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Reset Password LampungGo',
+      text: `Gunakan token ini untuk reset password: ${token}`,
+    });
+
+    return {
+      message: 'Link reset password telah dikirim ke email.',
     };
   }
 }
