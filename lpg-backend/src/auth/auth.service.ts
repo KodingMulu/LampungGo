@@ -153,17 +153,16 @@ export class AuthService {
    * when accept code forgot password
    * reset password allowed
    */
-  async resetPassword(token: string, newPass: string) {
+  async resetPassword(email: string, otp: string, newPass: string) {
     const user = await this.prisma.user.findFirst({
       where: {
-        resetToken: token,
-        resetTokenExpires: {
-          gt: new Date(),
-        },
+        email,
+        resetPasswordOtp: otp,
+        resetOtpExpires: { gt: new Date() },
       },
     });
     if (!user)
-      throw new BadRequestException('Token tidak valid atau kadaluwarsa');
+      throw new BadRequestException('Kode OTP salah atau sudah kadaluwarsa');
 
     const hashedPassword = await bcrypt.hash(newPass, 10);
     await this.prisma.user.update({
@@ -172,13 +171,13 @@ export class AuthService {
       },
       data: {
         password: hashedPassword,
-        resetToken: null,
-        resetTokenExpires: null,
+        resetPasswordOtp: null,
+        resetOtpExpires: null,
       },
     });
 
     return {
-      message: 'Password Berhasil Diubah',
+      message: 'Password berhasil diperbarui, silakan login',
     };
   }
 }

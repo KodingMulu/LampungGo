@@ -43,7 +43,7 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  resetPassword(@Body() body: { token: string; newPass: string }) {
-    return this.authService.resetPassword(body.token, body.newPass);
+  resetPassword(@Body() body: { email: string; otp: string; newPass: string }) {
+    return this.authService.resetPassword(body.email, body.otp, body.newPass);
   }
 }
