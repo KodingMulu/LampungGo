@@ -148,4 +148,38 @@ export class AuthService {
       message: 'Link reset password telah dikirim ke email.',
     };
   }
+
+  /**
+   * Reset Password
+   * when accept code forgot password
+   * reset password allowed
+   */
+  async resetPassword(token: string, newPass: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpires: {
+          gt: new Date(),
+        },
+      },
+    });
+    if (!user)
+      throw new BadRequestException('Token tidak valid atau kadaluwarsa');
+
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpires: null,
+      },
+    });
+
+    return {
+      message: 'Password Berhasil Diubah',
+    };
+  }
 }
