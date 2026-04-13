@@ -7,9 +7,14 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import {
+  ForgotPassword,
+  LoginDto,
+  RegisterDto,
+  ResetPassword,
+  VerifyDto,
+} from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -51,13 +56,13 @@ export class AuthService {
    * Verify Code OTP
    * Verify code sending to mail user
    */
-  async verify(email: string, code: string) {
+  async verify(data: VerifyDto) {
     const user = await this.prisma.user.findUnique({
       where: {
-        email,
+        email: data.email,
       },
     });
-    if (!user || user.verificationCode !== code) {
+    if (!user || user.verificationCode !== data.code) {
       throw new BadRequestException(
         'Kode OTP salah atau email tidak ditemukan',
       );
@@ -65,7 +70,7 @@ export class AuthService {
 
     await this.prisma.user.update({
       where: {
-        email,
+        email: data.email,
       },
       data: {
         isVerified: true,
@@ -116,10 +121,10 @@ export class AuthService {
    * Forgot password
    * sending otp to email
    */
-  async forgotPassword(email: string) {
+  async forgotPassword(data: ForgotPassword) {
     const user = await this.prisma.user.findUnique({
       where: {
-        email,
+        email: data.email,
       },
     });
     if (!user) throw new NotFoundException('Email tidak terdaftar');
@@ -129,7 +134,7 @@ export class AuthService {
 
     await this.prisma.user.update({
       where: {
-        email,
+        email: data.email,
       },
       data: {
         resetPasswordOtp: otp,
@@ -138,7 +143,7 @@ export class AuthService {
     });
 
     await this.mailerService.sendMail({
-      to: email,
+      to: data.email,
       subject: 'Reset Password LampungGo',
       text: `Kode OTP reset password Anda adalah: ${otp}. Kode ini berlaku selama 15 menit.`,
     });
@@ -153,18 +158,18 @@ export class AuthService {
    * when accept code forgot password
    * reset password allowed
    */
-  async resetPassword(email: string, otp: string, newPass: string) {
+  async resetPassword(data: ResetPassword) {
     const user = await this.prisma.user.findFirst({
       where: {
-        email,
-        resetPasswordOtp: otp,
+        email: data.email,
+        resetPasswordOtp: data.code,
         resetOtpExpires: { gt: new Date() },
       },
     });
     if (!user)
       throw new BadRequestException('Kode OTP salah atau sudah kadaluwarsa');
 
-    const hashedPassword = await bcrypt.hash(newPass, 10);
+    const hashedPassword = await bcrypt.hash(data.newPass, 10);
     await this.prisma.user.update({
       where: {
         id: user.id,
