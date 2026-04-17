@@ -5,6 +5,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { CmsModule } from './cms/cms.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     PrismaModule,
     AuthModule,
+    CmsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
