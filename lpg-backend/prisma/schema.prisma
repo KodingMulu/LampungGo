@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  MITRA
+  ADMIN_WILAYAH
+  SUPER_ADMIN
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id               String    @id @default(uuid())
   name             String
@@ -21,11 +34,41 @@ model User {
   avatarUrl        String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+
+  mitraProfile     MitraProfile?
+  notifications    Notification[]
+  destinations     Destination[]
 }
 
-enum Role {
-  USER
-  MITRA
-  ADMIN_WILAYAH
-  SUPER_ADMIN
+model MitraProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  businessName String
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model Destination {
+  id            String   @id @default(uuid())
+  name          String
+  category      String
+  latitude      Float
+  longitude     Float
+  status        Status   @default(PENDING)
+  createdBy     String
+  createdAt     DateTime @default(now())
+
+  creator       User     @relation(fields: [createdBy], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
 }
