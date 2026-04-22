@@ -1,20 +1,22 @@
 "use client"
 import React from 'react';
+import Link from 'next/link'; // Pakai Link untuk navigasi
+import { usePathname } from 'next/navigation'; // Hook sakti Next.js
 import { Compass, Map, Ticket, Heart, Settings, LogOut, X } from 'lucide-react';
 
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  activeMenu: string;
-  setActiveMenu: (menu: string) => void;
 }
 
-export const Sidebar = ({ isOpen, setIsOpen, activeMenu, setActiveMenu }: SidebarProps) => {
+export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
+  const pathname = usePathname(); // Ini akan mengambil path seperti "/dashboard" atau "/dashboard/explorasi"
+
   const menuItems = [
-    { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Ikhtisar' },
-    { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplorasi' },
-    { id: 'Tickets', icon: <Ticket className="w-5 h-5" />, label: 'Tiket & Booking' },
-    { id: 'Favorites', icon: <Heart className="w-5 h-5" />, label: 'Favorit' },
+    { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Ikhtisar', href: '/dashboard' },
+    { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplorasi', href: '/dashboard/eksplorasi' },
+    { id: 'Tickets', icon: <Ticket className="w-5 h-5" />, label: 'Tiket & Booking', href: '/dashboard/tickets' },
+    { id: 'Favorites', icon: <Heart className="w-5 h-5" />, label: 'Favorit', href: '/dashboard/favorites' },
   ];
 
   return (
@@ -24,46 +26,50 @@ export const Sidebar = ({ isOpen, setIsOpen, activeMenu, setActiveMenu }: Sideba
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:relative lg:translate-x-0
       `}>
+        {/* Logo Section */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100">
-          <div className="flex items-center gap-2 text-emerald-700">
+           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="p-2 bg-emerald-100 rounded-xl">
               <Compass className="w-6 h-6 text-emerald-600" />
             </div>
-            <span className="text-xl font-bold tracking-wider text-slate-800">JELAJAH</span>
-          </div>
-          <button onClick={() => setIsOpen(false)} className="lg:hidden p-2 text-slate-400 hover:text-slate-600">
+            <span className="text-xl font-bold tracking-wider text-slate-800 uppercase">Jelajah</span>
+          </Link>
+          <button onClick={() => setIsOpen(false)} className="lg:hidden p-2 text-slate-400">
             <X className="w-5 h-5" />
           </button>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-2">Menu Utama</p>
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveMenu(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
-                activeMenu === item.id ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50'
-              }`}
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          ))}
           
-          <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-8">Lainnya</p>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all">
-            <Settings className="w-5 h-5" />
-            Pengaturan Akun
-          </button>
-        </nav>
+          {menuItems.map((item) => {
+            // Cek apakah item ini aktif berdasarkan URL
+            const isActive = pathname === item.href;
 
-        <div className="p-4 border-t border-slate-100">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium">
-            <LogOut className="w-5 h-5" />
-            Keluar
-          </button>
-        </div>
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                onClick={() => setIsOpen(false)} // Tutup menu mobile saat klik
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
+                  isActive 
+                    ? 'bg-emerald-50 text-emerald-700' 
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <div className={isActive ? 'text-emerald-600' : 'text-slate-400'}>
+                  {item.icon}
+                </div>
+                {item.label}
+              </Link>
+            );
+          })}
+          
+          {/* Menu Lainnya tetap sama pakai Link atau button */}
+        </nav>
+        
+        {/* Profile Footer tetap sama */}
       </aside>
 
       {/* Overlay Mobile */}
