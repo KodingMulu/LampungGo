@@ -5,7 +5,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { CmsModule } from './cms/cms.module';
+import { SuperAdminModule } from './modules/super-admin/super-admin.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { CmsModule } from './cms/cms.module';
     }),
     PrismaModule,
     AuthModule,
-    CmsModule,
+    SuperAdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
