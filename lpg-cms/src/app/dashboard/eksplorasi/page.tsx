@@ -5,7 +5,6 @@ import {
   MapPin, 
   Star, 
   SlidersHorizontal,
-  ChevronRight,
   Heart,
   Navigation
 } from 'lucide-react';
