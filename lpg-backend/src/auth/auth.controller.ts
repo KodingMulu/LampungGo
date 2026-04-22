@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,15 @@ import {
   ResetPassword,
   VerifyDto,
 } from './dto/auth.dto';
+import { Role } from '@prisma/client';
+
+interface RequestWithUser extends Request {
+  user: {
+    userId: string;
+    email: string;
+    role: Role;
+  };
+}
 
 @Controller('auth')
 export class AuthController {
@@ -50,5 +60,16 @@ export class AuthController {
   @Post('reset-password')
   resetPassword(@Body() body: ResetPassword) {
     return this.authService.resetPassword(body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Req() req: RequestWithUser) {
+    const userId = req.user.userId;
+    await this.authService.logout(userId);
+
+    return {
+      message: 'Logout berhasil, sesi telah dihapus dari server.',
+    };
   }
 }

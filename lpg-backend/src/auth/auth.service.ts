@@ -185,4 +185,38 @@ export class AuthService {
       message: 'Password berhasil diperbarui, silakan login',
     };
   }
+
+  /**
+   * Get Token
+   */
+  async getTokens(userId: string, email: string, role: string) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        { sub: userId, email, role },
+        { expiresIn: '15m', secret: process.env.JWT_ACCESS_SECRET },
+      ),
+      this.jwtService.signAsync(
+        { sub: userId, email, role },
+        { expiresIn: '7d', secret: process.env.JWT_REFRESH_SECRET },
+      ),
+    ]);
+
+    // Simpan Refresh Token ke Database (di-hash lebih bagus, tapi ini versi simpel)
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { refreshToken },
+    });
+
+    return { accessToken, refreshToken };
+  }
+
+  /**
+   * Logout
+   */
+  async logout(userId: string) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { refreshToken: null },
+    });
+  }
 }
