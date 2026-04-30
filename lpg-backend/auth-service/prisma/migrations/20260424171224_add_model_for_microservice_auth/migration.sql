@@ -1,0 +1,25 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'MITRA', 'ADMIN_WILAYAH', 'SUPER_ADMIN');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "verificationCode" TEXT,
+    "refreshToken" TEXT,
+    "resetPasswordOtp" TEXT,
+    "resetOtpExpires" TIMESTAMP(3),
+    "phone" TEXT,
+    "avatarUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
