@@ -1,19 +1,34 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { JwtPayload } from './types/auth-payload.type';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    @Inject('NOTIF_SERVICE') private readonly client: ClientProxy,
   ) {}
 
   async register(data: RegisterDto) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000,
+    ).toString();
+    const user = await this.prisma.user.create({
+      data: { ...data, verificationCode },
+    });
+
+    this.client.emit('send_verification_email', {
+      email: user.email,
+      name: user.name,
+      code: verificationCode,
+    });
+
     return this.prisma.user.create({
       data: {
         ...data,
