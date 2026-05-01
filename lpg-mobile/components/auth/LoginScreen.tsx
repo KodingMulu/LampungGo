@@ -66,4 +66,8 @@ export default function LoginScreen() {
           <Text style={styles.dividerText}>Atau login dengan</Text>
           <View style={styles.dividerLine} />
         </View>
-        
+         {/* Pilihan Login Sosial Media */}
+        <View style={styles.socialContainer}>
+          <TouchableOpacity style={styles.socialButton}>
+            <Text style={styles.socialButtonText}>Google</Text>
+          </TouchableOpacity>
