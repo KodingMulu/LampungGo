@@ -29,3 +29,24 @@ export default function LoginScreen() {
           <Text style={styles.title}>Welcome</Text>
           <Text style={styles.subtitle}>Silakan login untuk melanjutkan</Text>
         </View>
+
+        {/* Bagian Form Input */}
+        <View style={styles.form}>
+          <TextInput
+            style={styles.input}
+            placeholder="Email Address"
+            placeholderTextColor="#9ca3af"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor="#9ca3af"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        
