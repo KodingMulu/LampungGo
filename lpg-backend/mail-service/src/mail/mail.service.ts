@@ -43,4 +43,30 @@ export class MailService {
       this.logger.error(`Gagal mengirim email ke ${data.email}`, error);
     }
   }
+
+  async sendOtpResetEmail(data: { email: string; name: string; otp: string }) {
+    const mailOptions = {
+      from: '"LampungGo" <noreply@lampunggo.com>',
+      to: data.email,
+      subject: 'Reset Password OTP LampungGo',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h3>Halo ${data.name},</h3>
+          <p>Berikut adalah kode OTP Anda untuk mereset password akun anda:</p>
+          <div style="background-color: #f4f4f4; padding: 15px; border-radius: 8px; display: inline-block;">
+            <h1 style="color: #333; margin: 0; letter-spacing: 4px;">${data.otp}</h1>
+          </div>
+          <p style="color: #666; font-size: 14px;">Kode ini akan kedaluwarsa dalam 15 menit.</p>
+          <p style="color: #999; font-size: 12px;">Jika Anda tidak merasa mendaftar, silakan abaikan email ini.</p>
+        </div>
+      `,
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+      this.logger.log(`Email OTP berhasil terkirim ke ${data.email}`);
+    } catch (error) {
+      this.logger.error(`Gagal mengirim email ke ${data.email}`, error);
+    }
+  }
 }

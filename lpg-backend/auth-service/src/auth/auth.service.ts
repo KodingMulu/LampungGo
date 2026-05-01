@@ -7,7 +7,12 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { LoginDto, RegisterDto, VerifyDto } from './dto/auth.dto';
+import {
+  ForgotPassword,
+  LoginDto,
+  RegisterDto,
+  VerifyDto,
+} from './dto/auth.dto';
 import { JwtPayload } from './types/auth-payload.type';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -119,6 +124,39 @@ export class AuthService {
         name: user.name,
         role: user.role,
       },
+    };
+  }
+
+  async forgotPassword(data: ForgotPassword) {
+    const { email } = data;
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      throw new BadRequestException(
+        'Jika email terdaftar, kode OTP akan dikirimkan.',
+      );
+    }
+
+    const otp = this.generateOtp();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    await this.prisma.user.update({
+      where: { email },
+      data: {
+        otpCode: otp,
+        otpExpiresAt: expiresAt,
+      },
+    });
+
+    this.notificationClient.emit('send_reset_password_email', {
+      email: user.email,
+      otp: otp,
+      name: user.name,
+    });
+
+    return {
+      message:
+        'Jika email terdaftar, kode OTP akan dikirimkan ke email tersebut.',
     };
   }
 

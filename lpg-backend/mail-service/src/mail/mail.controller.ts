@@ -16,4 +16,15 @@ export class MailController {
 
     await this.mailService.sendOtpEmail(data);
   }
+
+  @EventPattern('send_reset_password_email')
+  async handleSendResetPasswordEvent(
+    @Payload() data: { email: string; name: string; otp: string },
+  ) {
+    this.logger.log(
+      `Menerima event send_reset_password_email untuk: ${data.email}`,
+    );
+
+    await this.mailService.sendOtpResetEmail(data);
+  }
 }

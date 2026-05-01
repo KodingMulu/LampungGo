@@ -1,6 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, VerifyDto } from './dto/auth.dto';
+import {
+  ForgotPassword,
+  LoginDto,
+  RegisterDto,
+  VerifyDto,
+} from './dto/auth.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtPayload } from './types/auth-payload.type';
 
@@ -21,6 +26,11 @@ export class AuthController {
   @Post('login')
   login(@Body() data: LoginDto) {
     return this.authService.login(data);
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() data: ForgotPassword) {
+    return this.authService.forgotPassword(data);
   }
 
   @MessagePattern({ cmd: 'get_user_by_id' })
