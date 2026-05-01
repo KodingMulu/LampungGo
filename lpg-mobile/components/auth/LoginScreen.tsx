@@ -71,3 +71,13 @@ export default function LoginScreen() {
           <TouchableOpacity style={styles.socialButton}>
             <Text style={styles.socialButtonText}>Google</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style={styles.socialButton}>
+            {/* Ganti dengan Icon Facebook/Apple dari react-native-vector-icons jika ada */}
+            <Text style={styles.socialButtonText}>Facebook</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
