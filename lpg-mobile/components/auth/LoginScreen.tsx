@@ -60,4 +60,10 @@ export default function LoginScreen() {
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
         </View>
+        {/* Divider / Pemisah */}
+        <View style={styles.dividerContainer}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>Atau login dengan</Text>
+          <View style={styles.dividerLine} />
+        </View>
         
