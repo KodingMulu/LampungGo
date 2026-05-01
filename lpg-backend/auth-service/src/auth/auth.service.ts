@@ -100,6 +100,12 @@ export class AuthService {
       throw new UnauthorizedException('Kredensial salah');
     }
 
+    if (!user.isVerified) {
+      throw new UnauthorizedException(
+        'Akun belum terverifikasi. Silakan verifikasi OTP terlebih dahulu.',
+      );
+    }
+
     const payload = {
       sub: user.id,
       email: user.email,
