@@ -20,6 +20,6 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(8001);
-  console.log('Auth Service Running at:\nPort: 8001 (HTTP)\n8001 (TCP)');
+  console.log('Auth Service Running at:\nPort: 8001 (HTTP)\n9001 (TCP)');
 }
 bootstrap();
