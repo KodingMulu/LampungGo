@@ -54,4 +54,10 @@ export default function LoginScreen() {
           <TouchableOpacity style={styles.forgotPasswordContainer}>
             <Text style={styles.forgotPasswordText}>Lupa Password?</Text>
           </TouchableOpacity>
+
+          {/* Tombol Login Utama */}
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
         
