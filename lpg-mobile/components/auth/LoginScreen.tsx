@@ -49,4 +49,9 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
           />
+
+          {/* Tombol Forgot Password */}
+          <TouchableOpacity style={styles.forgotPasswordContainer}>
+            <Text style={styles.forgotPasswordText}>Lupa Password?</Text>
+          </TouchableOpacity>
         
