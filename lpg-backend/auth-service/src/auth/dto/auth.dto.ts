@@ -42,7 +42,7 @@ export class VerifyDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Kode OTP tidak boleh kosong' })
-  @Length(4, 4, { message: 'Kode OTP harus 4 digit' })
+  @Length(6, 6, { message: 'Kode OTP harus 4 digit' })
   otpCode: string;
 }
 
