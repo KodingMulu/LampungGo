@@ -17,3 +17,15 @@ export default function LoginScreen() {
   const handleLogin = () => {
     console.log('Login attempt with:', email, password);
   };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.innerContainer}
+      >
+        {/* Bagian Title */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.subtitle}>Silakan login untuk melanjutkan</Text>
+        </View>
