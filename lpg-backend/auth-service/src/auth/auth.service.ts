@@ -27,10 +27,16 @@ export class AuthService {
     @Inject('NOTIFICATION_SERVICE') private notificationClient: ClientProxy,
   ) {}
 
+  /**
+   * Code for generate OTP Verify Account and Reset Password
+   */
   private generateOtp(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
+  /**
+   * Code for register user
+   */
   async register(data: RegisterDto) {
     const { email, password, name } = data;
 
@@ -68,6 +74,9 @@ export class AuthService {
     };
   }
 
+  /**
+   * Code for verify otp before account active
+   */
   async verifyOtp(data: VerifyDto) {
     const { email, otpCode } = data;
 
@@ -100,6 +109,9 @@ export class AuthService {
     };
   }
 
+  /**
+   * Code for login
+   */
   async login(data: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: data.email },
@@ -130,6 +142,9 @@ export class AuthService {
     };
   }
 
+  /**
+   * Code for forgot password
+   */
   async forgotPassword(data: ForgotPassword) {
     const { email } = data;
     const user = await this.prisma.user.findUnique({ where: { email } });
@@ -163,6 +178,9 @@ export class AuthService {
     };
   }
 
+  /**
+   * Code for verify reset otp before reset password
+   */
   async verifyResetOtp(data: VerifyResetOtpDto) {
     const { email, otpCode } = data;
 
@@ -192,6 +210,9 @@ export class AuthService {
     };
   }
 
+  /**
+   * Code for reset password after verify otp reset
+   */
   async resetPassword(data: ResetPasswordDto) {
     const { email, resetToken, newPassword } = data;
 
