@@ -81,3 +81,94 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  innerContainer: {
+    flex: 1,
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+  },
+  header: {
+    marginBottom: 40,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#1e293b',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#64748b',
+  },
+  form: {
+    marginBottom: 30,
+  },
+  input: {
+    backgroundColor: '#f1f5f9',
+    borderRadius: 16, 
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    fontSize: 16,
+    color: '#1e293b',
+    marginBottom: 16,
+  },
+  forgotPasswordContainer: {
+    alignItems: 'flex-end',
+    marginBottom: 24,
+  },
+  forgotPasswordText: {
+    color: '#3b82f6',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  loginButton: {
+    backgroundColor: '#0f172a', // Warna gelap premium
+    borderRadius: 16,
+    paddingVertical: 18,
+    alignItems: 'center',
+  },
+  loginButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#e2e8f0',
+  },
+  dividerText: {
+    marginHorizontal: 16,
+    color: '#64748b',
+    fontSize: 14,
+  },
+  socialContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  socialButton: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
+  socialButtonText: {
+    color: '#1e293b',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+});
