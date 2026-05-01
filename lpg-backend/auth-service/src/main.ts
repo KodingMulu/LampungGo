@@ -19,7 +19,7 @@ async function bootstrap() {
   app.enableCors();
 
   await app.startAllMicroservices();
-  await app.listen(3001);
-  console.log('Auth Service Running at:\nPort: 3001 (HTTP)\n8001 (TCP)');
+  await app.listen(8001);
+  console.log('Auth Service Running at:\nPort: 8001 (HTTP)\n8001 (TCP)');
 }
 bootstrap();

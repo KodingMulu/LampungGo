@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto, VerifyDto } from './dto/auth.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtPayload } from './types/auth-payload.type';
 
@@ -11,6 +11,11 @@ export class AuthController {
   @Post('register')
   register(@Body() data: RegisterDto) {
     return this.authService.register(data);
+  }
+
+  @Post('verify')
+  async verifyOtp(@Body() data: VerifyDto) {
+    return this.authService.verifyOtp(data);
   }
 
   @Post('login')

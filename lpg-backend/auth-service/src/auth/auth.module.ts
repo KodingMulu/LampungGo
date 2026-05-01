@@ -11,7 +11,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     PrismaModule,
     ClientsModule.register([
       {
-        name: 'NOTIF_SERVICE',
+        name: 'NOTIFICATION_SERVICE',
         transport: Transport.TCP,
         options: {
           host: '127.0.0.1',

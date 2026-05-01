@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Length,
   MinLength,
 } from 'class-validator';
 
@@ -17,16 +18,16 @@ export class LoginDto {
 
 export class RegisterDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Nama tidak boleh kosong' })
   name!: string;
 
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Format email tidak valid' })
+  @IsNotEmpty({ message: 'Email tidak boleh kosong' })
   email!: string;
 
   @IsString()
-  @IsNotEmpty()
-  @MinLength(6, { message: 'Password Minimal 6 Karakter' })
+  @IsNotEmpty({ message: 'Password tidak boleh kosong' })
+  @Length(6, 20, { message: 'Password harus antara 6 hingga 20 karakter' })
   password!: string;
 
   @IsString()
@@ -35,12 +36,14 @@ export class RegisterDto {
 }
 
 export class VerifyDto {
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Format email tidak valid' })
+  @IsNotEmpty({ message: 'Email tidak boleh kosong' })
   email!: string;
 
   @IsString()
-  code: string;
+  @IsNotEmpty({ message: 'Kode OTP tidak boleh kosong' })
+  @Length(4, 4, { message: 'Kode OTP harus 4 digit' })
+  otpCode: string;
 }
 
 export class ForgotPassword {
