@@ -53,7 +53,7 @@ export class ForgotPassword {
   email: string;
 }
 
-export class ResetPassword {
+export class VerifyResetOtpDto {
   @IsEmail({}, { message: 'Format email tidak valid' })
   @IsNotEmpty({ message: 'Email tidak boleh kosong' })
   email: string;
@@ -62,6 +62,16 @@ export class ResetPassword {
   @IsNotEmpty({ message: 'Kode OTP tidak boleh kosong' })
   @Length(6, 6, { message: 'Kode OTP harus 6 digit' })
   otpCode: string;
+}
+
+export class ResetPasswordDto {
+  @IsEmail({}, { message: 'Format email tidak valid' })
+  @IsNotEmpty({ message: 'Email tidak boleh kosong' })
+  email: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Reset token tidak boleh kosong' })
+  resetToken: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Password baru tidak boleh kosong' })

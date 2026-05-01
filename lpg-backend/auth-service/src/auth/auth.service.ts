@@ -7,11 +7,14 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import {
   ForgotPassword,
   LoginDto,
   RegisterDto,
+  ResetPasswordDto,
   VerifyDto,
+  VerifyResetOtpDto,
 } from './dto/auth.dto';
 import { JwtPayload } from './types/auth-payload.type';
 import { ClientProxy } from '@nestjs/microservices';
@@ -157,6 +160,66 @@ export class AuthService {
     return {
       message:
         'Jika email terdaftar, kode OTP akan dikirimkan ke email tersebut.',
+    };
+  }
+
+  async verifyResetOtp(data: VerifyResetOtpDto) {
+    const { email, otpCode } = data;
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user) throw new BadRequestException('Permintaan tidak valid');
+    if (user.otpCode !== otpCode)
+      throw new BadRequestException('Kode OTP tidak valid');
+    if (user.otpExpiresAt && user.otpExpiresAt < new Date()) {
+      throw new BadRequestException('Kode OTP sudah kedaluwarsa');
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const newExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    await this.prisma.user.update({
+      where: { email },
+      data: {
+        otpCode: resetToken,
+        otpExpiresAt: newExpiresAt,
+      },
+    });
+
+    return {
+      message: 'OTP valid. Silakan lanjutkan untuk membuat password baru.',
+      resetToken: resetToken,
+    };
+  }
+
+  async resetPassword(data: ResetPasswordDto) {
+    const { email, resetToken, newPassword } = data;
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user) throw new BadRequestException('Permintaan tidak valid');
+    if (user.otpCode !== resetToken)
+      throw new BadRequestException(
+        'Sesi reset password tidak valid atau sudah kedaluwarsa',
+      );
+    if (user.otpExpiresAt && user.otpExpiresAt < new Date()) {
+      throw new BadRequestException('Sesi reset password sudah kedaluwarsa');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { email },
+      data: {
+        password: hashedNewPassword,
+        otpCode: null,
+        otpExpiresAt: null,
+      },
+    });
+
+    return {
+      message:
+        'Password berhasil diubah. Silakan login dengan password baru Anda.',
     };
   }
 

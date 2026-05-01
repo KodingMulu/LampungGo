@@ -4,7 +4,9 @@ import {
   ForgotPassword,
   LoginDto,
   RegisterDto,
+  ResetPasswordDto,
   VerifyDto,
+  VerifyResetOtpDto,
 } from './dto/auth.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtPayload } from './types/auth-payload.type';
@@ -31,6 +33,16 @@ export class AuthController {
   @Post('forgot-password')
   async forgotPassword(@Body() data: ForgotPassword) {
     return this.authService.forgotPassword(data);
+  }
+
+  @Post('verify-reset-otp')
+  async verifyResetOtp(@Body() data: VerifyResetOtpDto) {
+    return this.authService.verifyResetOtp(data);
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() data: ResetPasswordDto) {
+    return this.authService.resetPassword(data);
   }
 
   @MessagePattern({ cmd: 'get_user_by_id' })
