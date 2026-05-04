@@ -18,6 +18,7 @@ import {
 } from './dto/auth.dto';
 import { JwtPayload } from './types/auth-payload.type';
 import { ClientProxy } from '@nestjs/microservices';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -269,5 +270,16 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  async syncRoleUpdate(accountId: string, newRole: Role) {
+    await this.prisma.user.update({
+      where: {
+        id: accountId,
+      },
+      data: {
+        role: newRole,
+      },
+    });
   }
 }

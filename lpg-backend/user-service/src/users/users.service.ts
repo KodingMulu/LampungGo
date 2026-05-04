@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,10 +11,14 @@ import {
   UpdateMitraStatusDto,
 } from './dto/users.dto';
 import { MitraStatus, Role, Prisma } from '@prisma/client';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject('AUTH_SERVICE') private authClient: ClientProxy,
+  ) {}
 
   async createProfile(data: CreateProfile) {
     const { accountId, email, name, role } = data;
@@ -78,7 +83,7 @@ export class UsersService {
       throw new BadRequestException('regionId wajib diisi untuk Admin Wilayah');
     }
 
-    return this.prisma.userProfile.update({
+    const updateUsers = await this.prisma.userProfile.update({
       where: {
         id: userId,
       },
@@ -87,5 +92,12 @@ export class UsersService {
         regionId: data.regionId || null,
       },
     });
+
+    this.authClient.emit('role_updated', {
+      accountId: updateUsers.accountId,
+      role: updateUsers.role,
+    });
+
+    return updateUsers;
   }
 }
