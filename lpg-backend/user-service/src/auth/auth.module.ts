@@ -18,7 +18,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.TCP,
         options: {
           host: '127.0.0.1',
-          port: 9001, // Port tempat auth-service berjalan
+          port: 9001,
         },
       },
     ]),

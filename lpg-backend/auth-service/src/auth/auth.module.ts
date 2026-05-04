@@ -18,6 +18,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           port: 9002,
         },
       },
+      {
+        name: 'USER_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: '127.0.0.1',
+          port: 9003,
+        },
+      },
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
