@@ -8,6 +8,7 @@ import {
   Request,
   Logger,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
@@ -19,6 +20,7 @@ import {
   UpdateMitraStatusDto,
   AssignRoleDto,
   CreateRegionDto,
+  UpdateRegionDto,
 } from './dto/users.dto';
 
 interface CreateProfilePayload {
@@ -59,6 +61,27 @@ export class UsersController {
   @Post('regions')
   createRegion(@Body() dto: CreateRegionDto) {
     return this.usersService.createRegion(dto);
+  }
+
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('regions')
+  getAllRegions() {
+    return this.usersService.getAllRegions();
+  }
+
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch('regions/:id')
+  updateRegion(@Param('id') id: string, @Body() dto: UpdateRegionDto) {
+    return this.usersService.updateRegion(id, dto);
+  }
+
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete('regions/:id')
+  deleteRegion(@Param('id') id: string) {
+    return this.usersService.deleteRegion(id);
   }
 
   @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)

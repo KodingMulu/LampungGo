@@ -10,6 +10,7 @@ import {
   CreateProfile,
   CreateRegionDto,
   UpdateMitraStatusDto,
+  UpdateRegionDto,
 } from './dto/users.dto';
 import { MitraStatus, Role, Prisma } from '@prisma/client';
 import { ClientProxy } from '@nestjs/microservices';
@@ -70,6 +71,29 @@ export class UsersService {
     if (existing)
       throw new BadRequestException('Wilayah dengan nama ini sudah ada');
     return this.prisma.region.create({ data: dto });
+  }
+
+  async getAllRegions() {
+    return this.prisma.region.findMany({
+      include: { _count: { select: { admins: true } } },
+    });
+  }
+
+  async updateRegion(id: string, dto: UpdateRegionDto) {
+    const region = await this.prisma.region.findUnique({ where: { id } });
+    if (!region) throw new NotFoundException('Wilayah tidak ditemukan');
+    return this.prisma.region.update({ where: { id }, data: dto });
+  }
+
+  async deleteRegion(id: string) {
+    const adminCount = await this.prisma.userProfile.count({
+      where: { regionId: id },
+    });
+    if (adminCount > 0)
+      throw new BadRequestException(
+        'Gagal: Masih ada Admin Wilayah yang terikat di wilayah ini.',
+      );
+    return this.prisma.region.delete({ where: { id } });
   }
 
   async getPendingMitra(adminRole: Role, adminRegionId?: string) {
