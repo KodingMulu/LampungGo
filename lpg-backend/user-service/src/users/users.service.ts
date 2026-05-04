@@ -33,6 +33,32 @@ export class UsersService {
     });
   }
 
+  async getDashboardStats() {
+    const [
+      totalUsers,
+      totalMitra,
+      pendingMitra,
+      totalAdminWilayah,
+      totalRegions,
+    ] = await Promise.all([
+      this.prisma.userProfile.count({ where: { role: Role.USER } }),
+      this.prisma.userProfile.count({ where: { role: Role.MITRA } }),
+      this.prisma.userProfile.count({
+        where: { role: Role.MITRA, mitraStatus: MitraStatus.PENDING },
+      }),
+      this.prisma.userProfile.count({ where: { role: Role.ADMIN_WILAYAH } }),
+      this.prisma.region.count(),
+    ]);
+
+    return {
+      totalUsers,
+      totalMitra,
+      pendingMitra,
+      totalAdminWilayah,
+      totalRegions,
+    };
+  }
+
   async getPendingMitra(adminRole: Role, adminRegionId?: string) {
     const whereClause: Prisma.UserProfileWhereInput = {
       role: Role.MITRA,

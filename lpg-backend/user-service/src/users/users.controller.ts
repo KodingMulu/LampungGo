@@ -39,6 +39,13 @@ export class UsersController {
     await this.usersService.createProfile(data);
   }
 
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('dashboard/stats')
+  getDashboardStats() {
+    return this.usersService.getDashboardStats();
+  }
+
   @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('mitra/pending')

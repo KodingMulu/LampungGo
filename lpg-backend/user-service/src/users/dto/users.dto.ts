@@ -39,3 +39,23 @@ export class AssignRoleDto {
   @IsOptional()
   regionId?: string;
 }
+
+export class CreateRegionDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+}
+
+export class UpdateRegionDto {
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+}
