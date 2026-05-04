@@ -25,6 +25,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
     @Inject('NOTIFICATION_SERVICE') private notificationClient: ClientProxy,
+    @Inject('USER_SERVICE') private userServiceClient: ClientProxy,
   ) {}
 
   /**
@@ -95,13 +96,20 @@ export class AuthService {
       throw new BadRequestException('Kode OTP telah kadaluarsa');
     }
 
-    await this.prisma.user.update({
+    const verifiedUser = await this.prisma.user.update({
       where: { email },
       data: {
         isVerified: true,
         otpCode: null,
         otpExpiresAt: null,
       },
+    });
+
+    this.userServiceClient.emit('account_created', {
+      accountId: verifiedUser.id,
+      email: verifiedUser.email,
+      name: verifiedUser.name,
+      role: verifiedUser.role,
     });
 
     return {
