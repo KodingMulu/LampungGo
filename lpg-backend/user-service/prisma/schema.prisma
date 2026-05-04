@@ -27,6 +27,17 @@ enum MitraStatus {
   REJECTED
 }
 
+model Region {
+  id String @id @default(uuid())
+  name String @unique
+  description String
+
+  admins UserProfile[]
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
 model UserProfile {
   id           String      @id @default(uuid())
   accountId    String      @unique
@@ -35,6 +46,7 @@ model UserProfile {
   role         Role        @default(USER)
 
   regionId     String?
+  region       Region?     @relation(fields: [regionId], references: [id])
   phoneNumber  String?
   avatarUrl    String?
   mitraStatus  MitraStatus @default(PENDING)
