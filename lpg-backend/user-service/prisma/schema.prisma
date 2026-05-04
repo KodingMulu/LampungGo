@@ -28,29 +28,29 @@ enum MitraStatus {
 }
 
 model Region {
-  id String @id @default(uuid())
-  name String @unique
-  description String
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
 
-  admins UserProfile[]
+  admins      UserProfile[]
 
-  createdAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
 }
 
 model UserProfile {
-  id           String      @id @default(uuid())
-  accountId    String      @unique
-  email        String      @unique
-  name         String
-  role         Role        @default(USER)
+  id        String @id @default(uuid())
+  accountId String @unique
+  email     String @unique
+  name      String
+  role      Role   @default(USER)
 
-  regionId     String?
-  region       Region?     @relation(fields: [regionId], references: [id])
-  phoneNumber  String?
-  avatarUrl    String?
-  mitraStatus  MitraStatus @default(PENDING)
+  regionId    String?
+  region      Region?     @relation(fields: [regionId], references: [id])
+  phoneNumber String?
+  avatarUrl   String?
+  mitraStatus MitraStatus @default(PENDING)
 
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -7,6 +7,7 @@ import {
   UseGuards,
   Request,
   Logger,
+  Post,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
@@ -14,7 +15,11 @@ import { Role, UserProfile } from '@prisma/client';
 import { Roles } from '../common/guards/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { UpdateMitraStatusDto, AssignRoleDto } from './dto/users.dto';
+import {
+  UpdateMitraStatusDto,
+  AssignRoleDto,
+  CreateRegionDto,
+} from './dto/users.dto';
 
 interface CreateProfilePayload {
   accountId: string;
@@ -39,11 +44,21 @@ export class UsersController {
     await this.usersService.createProfile(data);
   }
 
+  /**
+   * Feature Super Admin
+   */
   @Roles(Role.SUPER_ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('dashboard/stats')
   getDashboardStats() {
     return this.usersService.getDashboardStats();
+  }
+
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Post('regions')
+  createRegion(@Body() dto: CreateRegionDto) {
+    return this.usersService.createRegion(dto);
   }
 
   @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)

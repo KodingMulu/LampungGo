@@ -8,6 +8,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import {
   AssignRoleDto,
   CreateProfile,
+  CreateRegionDto,
   UpdateMitraStatusDto,
 } from './dto/users.dto';
 import { MitraStatus, Role, Prisma } from '@prisma/client';
@@ -33,6 +34,9 @@ export class UsersService {
     });
   }
 
+  /**
+   * Feature Super Admin
+   */
   async getDashboardStats() {
     const [
       totalUsers,
@@ -57,6 +61,15 @@ export class UsersService {
       totalAdminWilayah,
       totalRegions,
     };
+  }
+
+  async createRegion(dto: CreateRegionDto) {
+    const existing = await this.prisma.region.findUnique({
+      where: { name: dto.name },
+    });
+    if (existing)
+      throw new BadRequestException('Wilayah dengan nama ini sudah ada');
+    return this.prisma.region.create({ data: dto });
   }
 
   async getPendingMitra(adminRole: Role, adminRegionId?: string) {
