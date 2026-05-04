@@ -10,6 +10,7 @@ import {
 } from './dto/auth.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtPayload } from './types/auth-payload.type';
+import { Role } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -53,5 +54,10 @@ export class AuthController {
   @MessagePattern({ cmd: 'validate_token' })
   async validateToken(@Payload() token: string): Promise<JwtPayload | null> {
     return this.authService.validateToken(token);
+  }
+
+  @MessagePattern({ cmd: 'role_updated' })
+  async handleRoleUpdated(@Payload() data: { accountId: string; role: Role }) {
+    await this.authService.syncRoleUpdate(data.accountId, data.role);
   }
 }
