@@ -12,7 +12,7 @@ import {
   UpdateMitraStatusDto,
   UpdateRegionDto,
 } from './dto/users.dto';
-import { MitraStatus, Role, Prisma } from '@prisma/client';
+import { MitraStatus, Prisma, Role } from '@prisma/client';
 import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
@@ -83,7 +83,14 @@ export class UsersService {
   async updateRegion(id: string, dto: UpdateRegionDto) {
     const region = await this.prisma.region.findUnique({ where: { id } });
     if (!region) throw new NotFoundException('Wilayah tidak ditemukan');
-    return this.prisma.region.update({ where: { id }, data: dto });
+
+    return this.prisma.region.update({
+      where: { id },
+      data: {
+        name: dto.name,
+        ...(dto.description !== undefined && { description: dto.description }),
+      },
+    });
   }
 
   async deleteRegion(id: string) {
@@ -98,7 +105,7 @@ export class UsersService {
   }
 
   /**
-   * Feature Admin Wilayah
+   * Feature Super Admin
    * Manage Users
    */
   async getAllUsers(roleFilter?: Role) {
@@ -154,6 +161,10 @@ export class UsersService {
     return { message: 'Pengguna berhasil dihapus secara permanen' };
   }
 
+  /**
+   * Feature Super Admin
+   * Validate Mitra
+   */
   async getPendingMitra(adminRole: Role, adminRegionId?: string) {
     const whereClause: Prisma.UserProfileWhereInput = {
       role: Role.MITRA,
@@ -162,8 +173,9 @@ export class UsersService {
 
     if (adminRole === Role.ADMIN_WILAYAH) {
       if (!adminRegionId)
-        throw new BadRequestException('Admin Wilayah tidak memiliki regionId');
-
+        throw new BadRequestException(
+          'Admin Wilayah ini tidak memiliki regionId',
+        );
       whereClause.regionId = adminRegionId;
     }
 
@@ -174,28 +186,24 @@ export class UsersService {
 
   async updateMitraStatus(
     mitraId: string,
-    data: UpdateMitraStatusDto,
+    dto: UpdateMitraStatusDto,
     adminRole: Role,
     adminRegionId?: string,
   ) {
     const mitra = await this.prisma.userProfile.findUnique({
       where: { id: mitraId },
     });
-    if (!mitra) throw new NotFoundException('Mitra tidak ditemukan');
+    if (!mitra) throw new NotFoundException('Data mitra tidak ditemukan');
 
     if (adminRole === Role.ADMIN_WILAYAH && mitra.regionId !== adminRegionId) {
       throw new BadRequestException(
-        'Anda tidak memiliki akses memvalidasi mitra di luar wilayah Anda',
+        'Anda tidak dapat memvalidasi mitra di luar wilayah Anda',
       );
     }
 
     return this.prisma.userProfile.update({
-      where: {
-        id: mitraId,
-      },
-      data: {
-        mitraStatus: data.status,
-      },
+      where: { id: mitraId },
+      data: { mitraStatus: dto.status },
     });
   }
 }

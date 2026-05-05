@@ -118,6 +118,10 @@ export class UsersController {
     return this.usersService.deleteUser(id);
   }
 
+  /**
+   * Feature Super Admin and Admin Wilayah
+   * Mitra Validation
+   */
   @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('mitra/pending')
