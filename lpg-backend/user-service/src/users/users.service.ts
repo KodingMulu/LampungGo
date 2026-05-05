@@ -37,6 +37,7 @@ export class UsersService {
 
   /**
    * Feature Super Admin
+   * CRUD Region
    */
   async getDashboardStats() {
     const [
@@ -96,6 +97,63 @@ export class UsersService {
     return this.prisma.region.delete({ where: { id } });
   }
 
+  /**
+   * Feature Admin Wilayah
+   * Manage Users
+   */
+  async getAllUsers(roleFilter?: Role) {
+    return this.prisma.userProfile.findMany({
+      where: roleFilter ? { role: roleFilter } : undefined,
+      include: { region: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async getUserById(id: string) {
+    const user = await this.prisma.userProfile.findUnique({
+      where: { id },
+      include: { region: true },
+    });
+    if (!user) throw new NotFoundException('Data pengguna tidak ditemukan');
+    return user;
+  }
+
+  async assignRole(userId: string, data: AssignRoleDto) {
+    if (data.role === Role.ADMIN_WILAYAH && !data.regionId) {
+      throw new BadRequestException('regionId wajib diisi untuk Admin Wilayah');
+    }
+
+    const updateUsers = await this.prisma.userProfile.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        role: data.role,
+        regionId: data.regionId || null,
+      },
+    });
+
+    this.authClient.emit('role_updated', {
+      accountId: updateUsers.accountId,
+      role: updateUsers.role,
+    });
+
+    return updateUsers;
+  }
+
+  async deleteUser(id: string) {
+    const user = await this.prisma.userProfile.findUnique({ where: { id } });
+    if (!user) throw new NotFoundException('Pengguna tidak ditemukan');
+    if (user.role === Role.SUPER_ADMIN)
+      throw new BadRequestException('Tidak dapat menghapus sesama Super Admin');
+
+    await this.prisma.userProfile.delete({ where: { id } });
+
+    this.authClient.emit('account_deleted', { accountId: user.accountId });
+
+    return { message: 'Pengguna berhasil dihapus secara permanen' };
+  }
+
   async getPendingMitra(adminRole: Role, adminRegionId?: string) {
     const whereClause: Prisma.UserProfileWhereInput = {
       role: Role.MITRA,
@@ -139,28 +197,5 @@ export class UsersService {
         mitraStatus: data.status,
       },
     });
-  }
-
-  async assignRole(userId: string, data: AssignRoleDto) {
-    if (data.role === Role.ADMIN_WILAYAH && !data.regionId) {
-      throw new BadRequestException('regionId wajib diisi untuk Admin Wilayah');
-    }
-
-    const updateUsers = await this.prisma.userProfile.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        role: data.role,
-        regionId: data.regionId || null,
-      },
-    });
-
-    this.authClient.emit('role_updated', {
-      accountId: updateUsers.accountId,
-      role: updateUsers.role,
-    });
-
-    return updateUsers;
   }
 }

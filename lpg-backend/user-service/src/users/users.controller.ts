@@ -9,6 +9,7 @@ import {
   Logger,
   Post,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
@@ -48,6 +49,7 @@ export class UsersController {
 
   /**
    * Feature Super Admin
+   * Region Management
    */
   @Roles(Role.SUPER_ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -84,6 +86,38 @@ export class UsersController {
     return this.usersService.deleteRegion(id);
   }
 
+  /**
+   * Feature Admin Wilayah
+   * Manage Users
+   */
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('all')
+  getAllUsers(@Query('role') role?: Role) {
+    return this.usersService.getAllUsers(role);
+  }
+
+  @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('all/:id')
+  getUserById(@Param('id') id: string) {
+    return this.usersService.getUserById(id);
+  }
+
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch('all/:id/assign-role')
+  assignRole(@Param('id') id: string, @Body() dto: AssignRoleDto) {
+    return this.usersService.assignRole(id, dto);
+  }
+
+  @Roles(Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete('all/:id')
+  deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
+  }
+
   @Roles(Role.SUPER_ADMIN, Role.ADMIN_WILAYAH)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('mitra/pending')
@@ -111,12 +145,5 @@ export class UsersController {
       adminRole,
       adminRegionId,
     );
-  }
-
-  @Roles(Role.SUPER_ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch(':id/assign-role')
-  assignRole(@Param('id') id: string, @Body() dto: AssignRoleDto) {
-    return this.usersService.assignRole(id, dto);
   }
 }
