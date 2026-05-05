@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { Role, UserProfile } from '@prisma/client';
+import { MitraStatus, Role, UserProfile } from '@prisma/client';
 import { Roles } from '../common/guards/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -23,6 +23,7 @@ import {
   CreateRegionDto,
   UpdateRegionDto,
 } from './dto/users.dto';
+import { Request as ExpressRequest } from 'express';
 
 interface CreateProfilePayload {
   accountId: string;
@@ -31,7 +32,7 @@ interface CreateProfilePayload {
   role: Role;
 }
 
-interface RequestWithUser extends Request {
+interface RequestWithUser extends ExpressRequest {
   user: UserProfile;
 }
 
@@ -148,6 +149,30 @@ export class UsersController {
       dto,
       adminRole,
       adminRegionId,
+    );
+  }
+
+  /**
+   * Feature Admin Wilayah
+   * Mitra Management
+   */
+  @Roles(Role.ADMIN_WILAYAH)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('regional/stats')
+  getRegionalStats(@Request() req: RequestWithUser) {
+    return this.usersService.getRegionalStats(req.user.regionId as string);
+  }
+
+  @Roles(Role.ADMIN_WILAYAH)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('regional/mitra')
+  getRegionalMitra(
+    @Request() req: RequestWithUser,
+    @Query('status') status?: MitraStatus,
+  ) {
+    return this.usersService.getRegionalMitra(
+      req.user.regionId as string,
+      status,
     );
   }
 }
