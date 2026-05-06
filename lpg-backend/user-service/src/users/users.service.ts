@@ -143,6 +143,7 @@ export class UsersService {
     this.authClient.emit('role_updated', {
       accountId: updateUsers.accountId,
       role: updateUsers.role,
+      regionId: updateUsers.regionId,
     });
 
     return updateUsers;
