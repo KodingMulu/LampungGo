@@ -18,19 +18,13 @@ import {
   CreateDestinationDto,
   UpdateDestinationDto,
 } from './dto/destination.dto';
+import { Role } from '../common/enums/role.enum';
 
 export interface RequestUser {
   id: string;
   email: string;
   role: string;
   regionId?: string;
-}
-
-export enum Role {
-  USER = 'USER',
-  MITRA = 'MITRA',
-  ADMIN_WILAYAH = 'ADMIN_WILAYAH',
-  SUPER_ADMIN = 'SUPER_ADMIN',
 }
 
 @Controller('destinations')
