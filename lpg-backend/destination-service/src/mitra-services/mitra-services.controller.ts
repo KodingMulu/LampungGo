@@ -1,34 +1,67 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { MitraServicesService } from './mitra-services.service';
 import { CreateMitraServiceDto } from './dto/create-mitra-service.dto';
 import { UpdateMitraServiceDto } from './dto/update-mitra-service.dto';
+import { Roles } from '../common/guards/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { Role } from '../common/enums/role.enum';
+import { RequestUser } from 'src/destinations/destinations.service';
+import { ServiceType } from '@prisma/client';
 
 @Controller('mitra-services')
 export class MitraServicesController {
   constructor(private readonly mitraServicesService: MitraServicesService) {}
 
-  @Post()
-  create(@Body() createMitraServiceDto: CreateMitraServiceDto) {
-    return this.mitraServicesService.create(createMitraServiceDto);
+  @Roles(Role.MITRA) // Hanya Mitra yang bisa tambah jualan
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Post('cms/mitra-services')
+  create(
+    @Body() dto: CreateMitraServiceDto,
+    @Request() req: { user: RequestUser },
+  ) {
+    return this.mitraServicesService.create(dto, req.user);
   }
 
-  @Get()
-  findAll() {
-    return this.mitraServicesService.findAll();
+  @Roles(Role.MITRA, Role.ADMIN_WILAYAH, Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch('cms/mitra-services/:id')
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateMitraServiceDto,
+    @Request() req: { user: RequestUser },
+  ) {
+    return this.mitraServicesService.update(id, dto, req.user);
   }
 
-  @Get(':id')
+  @Roles(Role.MITRA, Role.ADMIN_WILAYAH, Role.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete('cms/mitra-services/:id')
+  remove(@Param('id') id: string, @Request() req: { user: RequestUser }) {
+    return this.mitraServicesService.remove(id, req.user);
+  }
+
+  @Get('mitra-services')
+  findAll(
+    @Query('destinationId') destinationId?: string,
+    @Query('type') type?: ServiceType, // <-- UBAH STRING MENJADI ServiceType
+  ) {
+    return this.mitraServicesService.findAll(destinationId, type);
+  }
+
+  @Get('mitra-services/:id')
   findOne(@Param('id') id: string) {
-    return this.mitraServicesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMitraServiceDto: UpdateMitraServiceDto) {
-    return this.mitraServicesService.update(+id, updateMitraServiceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mitraServicesService.remove(+id);
+    return this.mitraServicesService.findOne(id);
   }
 }
