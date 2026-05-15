@@ -77,10 +77,23 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu }: 
           })}
 
           <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-8">Lainnya</p>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all font-medium">
-            <Settings className="w-5 h-5 text-slate-400" />
+          
+          {/* TOMBOL PENGATURAN YANG SUDAH DIPERBARUI */}
+          <button 
+            onClick={() => {
+              setActiveMenu('Settings');
+              onClose();
+            }}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
+              activeMenu === 'Settings' 
+                ? 'bg-emerald-50 text-emerald-700' 
+                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            <Settings className={`w-5 h-5 ${activeMenu === 'Settings' ? 'text-emerald-600' : 'text-slate-400'}`} />
             Pengaturan Akun
           </button>
+
         </nav>
 
         {/* Profile Footer Sidebar */}
