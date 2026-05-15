@@ -7,7 +7,8 @@ import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
-import TiketBooking from '@/components/dashboard/TiketBooking'; // <-- Import baru ditambahkan
+import TiketBooking from '@/components/dashboard/TiketBooking';
+import Favorit from '@/components/dashboard/Favorit'; // <-- Import Favorit ditambahkan
 
 // Data User Sementara
 const currentUser = {
@@ -56,23 +57,11 @@ export default function DashboardPage() {
           {/* Tampilan Eksplorasi */}
           {activeMenu === 'Destinations' && <Eksplorasi />}
 
-          {/* Tampilan Tiket & Booking (Baru Ditambahkan) */}
+          {/* Tampilan Tiket & Booking */}
           {activeMenu === 'Tickets' && <TiketBooking />}
           
-          {/* Tampilan Placeholder (Sekarang hanya untuk 'Favorites' saja) */}
-          {activeMenu === 'Favorites' && (
-             <div className="flex items-center justify-center h-full p-10 animate-in fade-in">
-               <div className="text-center bg-white p-12 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/50">
-                 <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                   <span className="text-3xl">🚧</span>
-                 </div>
-                 <h2 className="text-2xl font-bold text-slate-800">Halaman {getPageTitle()}</h2>
-                 <p className="text-slate-500 mt-3 max-w-sm mx-auto">
-                   Fitur ini sedang dalam tahap pengembangan. Segera kembali untuk melihat pembaruan!
-                 </p>
-               </div>
-             </div>
-          )}
+          {/* Tampilan Destinasi Favorit (Diperbarui) */}
+          {activeMenu === 'Favorites' && <Favorit />}
 
         </main>
       </div>
