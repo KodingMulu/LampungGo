@@ -6,13 +6,9 @@ import {
   MapPin, 
   Star, 
   ArrowRight, 
-  Trash2,
-  ChevronRight
+  Trash2
 } from 'lucide-react';
 
-// ==========================================
-// INTERFACES & TYPES
-// ==========================================
 interface FavoriteDestination {
   id: string;
   name: string;
@@ -23,114 +19,87 @@ interface FavoriteDestination {
   price: string;
 }
 
-// ==========================================
-// DATA MOCKUP FAVORIT
-// ==========================================
 const initialFavorites: FavoriteDestination[] = [
   { 
-    id: "d1", 
-    name: "Pulau Pahawang", 
-    location: "Pesawaran", 
-    image: "[https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80](https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)", 
-    rating: 4.8, 
-    reviews: 1245,
-    price: "Rp 250.000"
+    id: "d1", name: "Pulau Pahawang", location: "Pesawaran", image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", rating: 4.8, reviews: 1245, price: "Rp 250.000"
   },
   { 
-    id: "d4", 
-    name: "Teluk Kiluan", 
-    location: "Tanggamus", 
-    image: "[https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80](https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)", 
-    rating: 4.6, 
-    reviews: 920,
-    price: "Rp 150.000"
+    id: "d4", name: "Teluk Kiluan", location: "Tanggamus", image: "https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", rating: 4.6, reviews: 920, price: "Rp 150.000"
   },
   { 
-    id: "d6", 
-    name: "Menara Siger", 
-    location: "Bakauheni, Lampung Selatan", 
-    image: "[https://images.unsplash.com/photo-1628181677353-84724b1ae05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80](https://images.unsplash.com/photo-1628181677353-84724b1ae05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80)", 
-    rating: 4.4, 
-    reviews: 2150,
-    price: "Rp 15.000"
+    id: "d6", name: "Menara Siger", location: "Bakauheni", image: "https://images.unsplash.com/photo-1628181677353-84724b1ae05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", rating: 4.4, reviews: 2150, price: "Rp 15.000"
   }
 ];
 
 export default function Favorit() {
   const [favorites, setFavorites] = useState<FavoriteDestination[]>(initialFavorites);
 
-  // Fungsi simulasi untuk menghapus dari favorit
   const removeFavorite = (idToRemove: string) => {
-    // Menampilkan animasi keluar sebelum menghapus state bisa dilakukan di real app
-    // Di sini kita langsung filter state
     setFavorites(prev => prev.filter(dest => dest.id !== idToRemove));
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 w-full p-6 lg:p-10">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 w-full p-6 lg:p-10 pb-20">
       
-      {/* 1. Header Favorit */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-2">
+      {/* Header Favorit */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4 px-2">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Destinasi Favorit ❤️</h2>
-          <p className="text-slate-500 text-lg">Daftar tempat impian yang ingin Anda kunjungi di Lampung.</p>
+          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Destinasi Favorit ❤️</h2>
+          <p className="text-slate-500 text-lg font-medium">Daftar tempat impian yang ingin Anda kunjungi.</p>
         </div>
-        <div className="bg-white px-4 py-2 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 shadow-sm">
-          Total: <span className="text-emerald-600 font-bold">{favorites.length} Tempat</span>
+        <div className="bg-white px-5 py-2.5 rounded-full border border-slate-200 text-sm font-bold text-slate-600 shadow-[0_4px_15px_rgb(0,0,0,0.03)]">
+          Total: <span className="text-rose-600 ml-1">{favorites.length} Tempat</span>
         </div>
       </div>
 
-      {/* 2. Grid Destinasi Favorit */}
+      {/* Grid Destinasi Favorit */}
       {favorites.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
           {favorites.map((dest) => (
             <div 
               key={dest.id} 
-              className="group bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col hover:shadow-xl hover:shadow-red-900/5 transition-all duration-300"
+              className="group bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500"
             >
-              {/* Gambar & Tombol Hapus */}
-              <div className="relative h-52 overflow-hidden">
-                <img 
-                  src={dest.image} 
-                  alt={dest.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" 
-                />
-                
+              <div className="relative h-64 overflow-hidden p-2">
+                <div className="w-full h-full rounded-[1.5rem] overflow-hidden relative">
+                  <img 
+                    src={dest.image} 
+                    alt={dest.name} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-80" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-white font-semibold text-sm">
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" /> {dest.rating}
+                  </div>
+                </div>
+
                 {/* Tombol Hapus Favorit */}
                 <button 
                   onClick={() => removeFavorite(dest.id)}
-                  className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-md rounded-full text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 z-10 shadow-sm"
+                  className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur-md rounded-full text-rose-500 hover:bg-rose-600 hover:text-white transition-all duration-300 z-10 shadow-md hover:scale-110"
                   title="Hapus dari favorit"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Info Destinasi */}
-              <div className="p-5 flex flex-col flex-1">
-                <h4 className="font-bold text-slate-800 text-lg line-clamp-1 group-hover:text-emerald-600 transition-colors">
+              <div className="p-6 pt-5 flex flex-col flex-1">
+                <h4 className="font-extrabold text-slate-800 text-xl line-clamp-1 group-hover:text-emerald-600 transition-colors duration-300 mb-1">
                   {dest.name}
                 </h4>
-                
-                <p className="text-slate-500 text-sm flex items-center gap-1.5 mb-3 mt-1">
+                <p className="text-slate-500 text-sm flex items-center gap-1.5 mb-4 font-medium">
                   <MapPin className="w-4 h-4 text-emerald-500 flex-shrink-0" /> 
                   <span className="truncate">{dest.location}</span>
                 </p>
 
-                {/* Rating */}
-                <div className="flex items-center gap-1.5 mb-4">
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <span className="font-bold text-slate-700 text-sm">{dest.rating}</span>
-                  <span className="text-slate-400 text-xs">({dest.reviews.toLocaleString()})</span>
-                </div>
+                <div className="w-full h-px bg-slate-100 my-4" />
 
-                {/* Harga & Tombol Rencanakan */}
-                <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                <div className="mt-auto flex items-end justify-between">
                   <div>
-                    <span className="text-xs text-slate-400 block mb-0.5">Estimasi Biaya</span>
-                    <p className="font-bold text-emerald-600">{dest.price}</p>
+                    <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase block mb-1">Estimasi Biaya</span>
+                    <p className="font-extrabold text-lg text-emerald-600">{dest.price}</p>
                   </div>
-                  <button className="px-4 py-2 bg-emerald-50 text-emerald-600 text-sm font-semibold rounded-xl hover:bg-emerald-600 hover:text-white transition-colors duration-300">
+                  <button className="px-5 py-2.5 bg-emerald-50 text-emerald-600 text-sm font-bold rounded-xl hover:bg-emerald-600 hover:text-white transition-colors duration-300 active:scale-95 shadow-sm">
                     Rencanakan
                   </button>
                 </div>
@@ -139,21 +108,20 @@ export default function Favorit() {
           ))}
         </div>
       ) : (
-        /* 3. Empty State (Jika tidak ada favorit) */
-        <div className="w-full flex flex-col items-center justify-center py-24 text-center bg-white rounded-3xl border border-slate-100 shadow-sm">
-          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
-            <Heart className="w-10 h-10 text-red-300" />
+        /* Empty State */
+        <div className="w-full flex flex-col items-center justify-center py-28 text-center bg-white rounded-[2.5rem] border border-slate-100 shadow-sm mt-4">
+          <div className="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center mb-6">
+            <Heart className="w-12 h-12 text-rose-300" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">Belum Ada Favorit</h3>
-          <p className="text-slate-500 max-w-sm mb-6 leading-relaxed">
+          <h3 className="text-2xl font-extrabold text-slate-800 mb-3">Belum Ada Favorit</h3>
+          <p className="text-slate-500 max-w-md mb-8 font-medium leading-relaxed">
             Wah, sepertinya Anda belum menambahkan tempat impian. Kumpulkan destinasi wisata favorit Anda di sini!
           </p>
-          <a href="#" className="px-6 py-3 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-lg shadow-emerald-600/20">
-            Mulai Eksplorasi <ArrowRight className="w-4 h-4" />
-          </a>
+          <button className="px-8 py-4 bg-slate-900 text-white font-bold rounded-full hover:bg-emerald-600 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-emerald-600/30 active:scale-95">
+            Mulai Eksplorasi <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
       )}
-
     </div>
   );
 }
