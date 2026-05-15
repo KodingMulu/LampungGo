@@ -13,9 +13,6 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-// ==========================================
-// INTERFACES & TYPES (Strict Typing)
-// ==========================================
 type BookingStatus = 'Terkonfirmasi' | 'Menunggu' | 'Selesai' | 'Dibatalkan';
 
 interface BookingRecord {
@@ -31,9 +28,6 @@ interface BookingRecord {
   price: string;
 }
 
-// ==========================================
-// DATA MOCKUP TIKET
-// ==========================================
 const myBookings: BookingRecord[] = [
   {
     id: "bk-101",
@@ -44,7 +38,7 @@ const myBookings: BookingRecord[] = [
     time: "07:30 WIB",
     guests: 2,
     status: "Terkonfirmasi",
-    image: "[https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80](https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80)",
+    image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     price: "Rp 500.000"
   },
   {
@@ -56,7 +50,7 @@ const myBookings: BookingRecord[] = [
     time: "06:00 WIB",
     guests: 4,
     status: "Menunggu",
-    image: "[https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80](https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80)",
+    image: "https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     price: "Rp 600.000"
   },
   {
@@ -68,18 +62,14 @@ const myBookings: BookingRecord[] = [
     time: "08:00 WIB",
     guests: 2,
     status: "Selesai",
-    image: "[https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80](https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80)",
+    image: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     price: "Rp 100.000"
   }
 ];
 
-// ==========================================
-// KOMPONEN UTAMA
-// ==========================================
 export default function TiketBooking() {
   const [activeTab, setActiveTab] = useState<'Aktif' | 'Riwayat'>('Aktif');
 
-  // Filter data berdasarkan Tab
   const displayedBookings = myBookings.filter(booking => {
     if (activeTab === 'Aktif') {
       return booking.status === 'Terkonfirmasi' || booking.status === 'Menunggu';
@@ -87,30 +77,29 @@ export default function TiketBooking() {
     return booking.status === 'Selesai' || booking.status === 'Dibatalkan';
   });
 
-  // Helper fungsi untuk gaya badge status
   const getStatusBadge = (status: BookingStatus) => {
     switch (status) {
       case 'Terkonfirmasi':
         return (
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold border border-emerald-200">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold border border-emerald-200/60 shadow-sm">
             <CheckCircle2 className="w-3.5 h-3.5" /> Terkonfirmasi
           </div>
         );
       case 'Menunggu':
         return (
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-xs font-bold border border-amber-200">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-xl text-xs font-bold border border-amber-200/60 shadow-sm">
             <Clock className="w-3.5 h-3.5" /> Menunggu Pembayaran
           </div>
         );
       case 'Selesai':
         return (
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold border border-slate-200">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 shadow-sm">
             <CheckCircle2 className="w-3.5 h-3.5" /> Selesai
           </div>
         );
       case 'Dibatalkan':
         return (
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-red-100 text-red-700 rounded-lg text-xs font-bold border border-red-200">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-100 text-rose-700 rounded-xl text-xs font-bold border border-rose-200/60 shadow-sm">
             <AlertCircle className="w-3.5 h-3.5" /> Dibatalkan
           </div>
         );
@@ -118,31 +107,31 @@ export default function TiketBooking() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500 w-full p-6 lg:p-10">
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500 w-full p-6 lg:p-10 pb-20">
       
-      {/* 1. Header & Tabs */}
+      {/* Header & Tabs */}
       <div>
-        <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Tiket & Booking 🎟️</h2>
-        <p className="text-slate-500 text-lg mb-8">Kelola semua e-tiket dan riwayat perjalanan Anda di Lampung.</p>
+        <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Tiket & Booking 🎟️</h2>
+        <p className="text-slate-500 text-lg font-medium mb-8">Kelola semua e-tiket dan riwayat perjalanan Anda di Lampung.</p>
         
-        {/* Tab Navigation */}
-        <div className="flex gap-4 border-b border-slate-200">
+        {/* Tab Navigation (Gaya Modern) */}
+        <div className="flex gap-2 p-1.5 bg-slate-200/60 backdrop-blur-md rounded-2xl w-fit mb-2">
           <button 
             onClick={() => setActiveTab('Aktif')}
-            className={`pb-4 px-2 text-sm font-semibold transition-colors border-b-2 ${
+            className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 ${
               activeTab === 'Aktif' 
-                ? 'border-emerald-600 text-emerald-600' 
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'bg-white text-emerald-600 shadow-[0_2px_10px_rgba(0,0,0,0.05)]' 
+                : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
             }`}
           >
-            Tiket Aktif (Akan Datang)
+            Tiket Aktif
           </button>
           <button 
             onClick={() => setActiveTab('Riwayat')}
-            className={`pb-4 px-2 text-sm font-semibold transition-colors border-b-2 ${
+            className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 ${
               activeTab === 'Riwayat' 
-                ? 'border-emerald-600 text-emerald-600' 
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'bg-white text-emerald-600 shadow-[0_2px_10px_rgba(0,0,0,0.05)]' 
+                : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
             }`}
           >
             Riwayat Perjalanan
@@ -150,71 +139,74 @@ export default function TiketBooking() {
         </div>
       </div>
 
-      {/* 2. Daftar Tiket (List View) */}
+      {/* Daftar Tiket */}
       {displayedBookings.length > 0 ? (
-        <div className="space-y-5">
+        <div className="space-y-6">
           {displayedBookings.map((booking) => (
             <div 
               key={booking.id} 
-              className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 flex flex-col md:flex-row gap-6 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300"
+              className="group bg-white rounded-[2rem] border border-slate-100 p-5 md:p-6 flex flex-col md:flex-row gap-6 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500"
             >
-              {/* Gambar Thumbnail (Kiri) */}
-              <div className="w-full md:w-48 h-40 md:h-full rounded-2xl overflow-hidden flex-shrink-0">
+              {/* Gambar Thumbnail */}
+              <div className="w-full md:w-56 h-48 md:h-auto rounded-[1.5rem] overflow-hidden flex-shrink-0 relative">
                 <img 
                   src={booking.image} 
                   alt={booking.title} 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                 />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
               </div>
 
-              {/* Detail Info (Tengah) */}
+              {/* Detail Info */}
               <div className="flex-1 flex flex-col justify-center">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                  <span className="text-xs font-mono font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 uppercase tracking-wider">
                     {booking.bookingCode}
                   </span>
                   {getStatusBadge(booking.status)}
                 </div>
                 
-                <h3 className="text-xl font-bold text-slate-800 mb-1">{booking.title}</h3>
-                <p className="text-sm text-emerald-600 font-medium flex items-center gap-1.5 mb-4">
+                <h3 className="text-2xl font-extrabold text-slate-800 mb-1.5 group-hover:text-emerald-600 transition-colors">
+                  {booking.title}
+                </h3>
+                <p className="text-sm text-emerald-600 font-bold flex items-center gap-1.5 mb-5">
                   <MapPin className="w-4 h-4" /> {booking.destination}
                 </p>
 
-                <div className="flex flex-wrap gap-x-6 gap-y-2 mt-auto">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Calendar className="w-4 h-4 text-slate-400" />
+                <div className="flex flex-wrap gap-x-6 gap-y-3 mt-auto bg-slate-50 p-4 rounded-2xl border border-slate-100/50">
+                  <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                    <Calendar className="w-4 h-4 text-emerald-500" />
                     <span>{booking.date}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Clock className="w-4 h-4 text-slate-400" />
+                  <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                    <Clock className="w-4 h-4 text-emerald-500" />
                     <span>{booking.time}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Users className="w-4 h-4 text-slate-400" />
+                  <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                    <Users className="w-4 h-4 text-emerald-500" />
                     <span>{booking.guests} Orang</span>
                   </div>
                 </div>
               </div>
 
-              {/* Aksi (Kanan) */}
-              <div className="md:w-48 flex flex-col justify-between pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 md:pl-6">
+              {/* Aksi Pembayaran/Tiket */}
+              <div className="md:w-56 flex flex-col justify-between pt-5 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 md:pl-6">
                 <div>
-                  <span className="text-xs text-slate-400 block mb-0.5">Total Pembayaran</span>
-                  <p className="text-lg font-bold text-slate-800">{booking.price}</p>
+                  <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase block mb-1">Total Pembayaran</span>
+                  <p className="text-2xl font-extrabold text-slate-800">{booking.price}</p>
                 </div>
                 
-                <div className="mt-4 space-y-2">
+                <div className="mt-4 space-y-3">
                   {booking.status === 'Terkonfirmasi' ? (
-                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 transition-colors">
+                    <button className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-95 shadow-lg shadow-emerald-600/20">
                       <Download className="w-4 h-4" /> E-Tiket
                     </button>
                   ) : booking.status === 'Menunggu' ? (
-                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-500 text-white font-medium rounded-xl hover:bg-amber-600 transition-colors">
+                    <button className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-amber-500 text-white font-bold rounded-2xl hover:bg-amber-600 transition-colors active:scale-95 shadow-lg shadow-amber-500/20">
                       Bayar Sekarang
                     </button>
                   ) : (
-                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors">
+                    <button className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-colors active:scale-95">
                       Lihat Detail
                     </button>
                   )}
@@ -226,17 +218,17 @@ export default function TiketBooking() {
         </div>
       ) : (
         /* Empty State */
-        <div className="w-full flex flex-col items-center justify-center py-24 text-center bg-white rounded-3xl border border-slate-100">
-          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6">
-            <Ticket className="w-10 h-10 text-emerald-300" />
+        <div className="w-full flex flex-col items-center justify-center py-24 text-center bg-white rounded-[2.5rem] border border-slate-100 shadow-sm mt-4">
+          <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-6">
+            <Ticket className="w-12 h-12 text-emerald-300" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">Belum Ada Tiket</h3>
-          <p className="text-slate-500 max-w-sm mb-6">
+          <h3 className="text-2xl font-extrabold text-slate-800 mb-3">Belum Ada Tiket</h3>
+          <p className="text-slate-500 max-w-md mb-8 font-medium leading-relaxed">
             Anda belum memiliki tiket perjalanan di kategori ini. Yuk, mulai cari destinasi impianmu di Lampung!
           </p>
-          <a href="#" className="px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 transition-colors flex items-center gap-2">
-            Eksplorasi Destinasi <ChevronRight className="w-4 h-4" />
-          </a>
+          <button className="px-8 py-4 bg-slate-900 text-white font-bold rounded-full hover:bg-emerald-600 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-emerald-600/30 active:scale-95">
+            Eksplorasi Destinasi <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       )}
     </div>
