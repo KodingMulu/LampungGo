@@ -9,7 +9,8 @@ import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
 import TiketBooking from '@/components/dashboard/TiketBooking';
 import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan';
+import Pengaturan from '@/components/dashboard/pengaturan'; // Huruf P besar
+import ModalKeluar from '@/components/layout/ModalKeluar'; // <-- 1. Import ModalKeluar
 
 // Data User Sementara
 const currentUser = {
@@ -21,6 +22,9 @@ const currentUser = {
 export default function DashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState('Overview'); 
+  
+  // 2. State untuk mengatur kapan Pop-up Keluar muncul
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const getPageTitle = () => {
     switch (activeMenu) {
@@ -28,19 +32,28 @@ export default function DashboardPage() {
       case 'Destinations': return 'Eksplorasi';
       case 'Tickets': return 'Tiket & Booking';
       case 'Favorites': return 'Destinasi Favorit';
-      case 'Settings': return 'Pengaturan Akun'; // <-- 2. Judul untuk Pengaturan ditambahkan
+      case 'Settings': return 'Pengaturan Akun';
       default: return 'Dashboard';
     }
   };
 
+  // 3. Fungsi yang dijalankan jika tombol "Ya, Keluar" ditekan di dalam pop-up
+  const handleConfirmLogout = () => {
+    // Nantinya logika untuk menghapus sesi/token dan redirect ke halaman Login diletakkan di sini
+    alert("Berhasil Keluar! Anda akan dialihkan ke halaman Login.");
+    setIsLogoutModalOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex overflow-hidden">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex overflow-hidden relative">
       
+      {/* 4. Berikan fungsi onLogoutClick ke Sidebar agar Sidebar bisa memunculkan pop-up */}
       <Sidebar 
         isOpen={isSidebarOpen} 
         onClose={() => setIsSidebarOpen(false)} 
         activeMenu={activeMenu}
         setActiveMenu={setActiveMenu}
+        onLogoutClick={() => setIsLogoutModalOpen(true)} 
       />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
@@ -53,23 +66,23 @@ export default function DashboardPage() {
 
         <main className="flex-1 overflow-y-auto scroll-smooth">
           
-          {/* Tampilan Ikhtisar */}
+          {/* Tampilan Konten */}
           {activeMenu === 'Overview' && <Ikhtisar />}
-          
-          {/* Tampilan Eksplorasi */}
           {activeMenu === 'Destinations' && <Eksplorasi />}
-
-          {/* Tampilan Tiket & Booking */}
           {activeMenu === 'Tickets' && <TiketBooking />}
-          
-          {/* Tampilan Destinasi Favorit */}
           {activeMenu === 'Favorites' && <Favorit />}
-
-          {/* Tampilan Pengaturan (Baru Ditambahkan) */}
           {activeMenu === 'Settings' && <Pengaturan />}
 
         </main>
       </div>
+
+      {/* 5. Tampilan Pop-up (Modal) Keluar dipasang di luar susunan halaman */}
+      <ModalKeluar 
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)} // Menutup pop-up jika diklik 'Batal'
+        onConfirm={handleConfirmLogout}             // Menjalankan fungsi jika diklik 'Ya, Keluar'
+      />
+
     </div>
   );
 }

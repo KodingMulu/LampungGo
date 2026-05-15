@@ -11,14 +11,20 @@ import {
   X 
 } from 'lucide-react';
 
+// ==========================================
+// 1. PASTIKAN BAGIAN INI ADA!
+// Di sinilah kita memberi tahu TypeScript bahwa komponen
+// Sidebar boleh menerima fungsi onLogoutClick dari luar.
+// ==========================================
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
+  onLogoutClick?: () => void; // <-- Tanda '?' berarti properti ini opsional (boleh ada, boleh tidak)
 }
 
-export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, onLogoutClick }: SidebarProps) {
   const menuItems = [
     { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Ikhtisar' },
     { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplorasi' },
@@ -50,7 +56,7 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu }: 
           </button>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation Utama */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-2">Menu Utama</p>
           {menuItems.map((item) => {
@@ -60,7 +66,7 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu }: 
                 key={item.id}
                 onClick={() => {
                   setActiveMenu(item.id);
-                  onClose(); // Tutup sidebar di mobile setelah klik
+                  onClose(); 
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
                   isActive 
@@ -78,7 +84,6 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu }: 
 
           <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-8">Lainnya</p>
           
-          {/* TOMBOL PENGATURAN YANG SUDAH DIPERBARUI */}
           <button 
             onClick={() => {
               setActiveMenu('Settings');
@@ -93,15 +98,22 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu }: 
             <Settings className={`w-5 h-5 ${activeMenu === 'Settings' ? 'text-emerald-600' : 'text-slate-400'}`} />
             Pengaturan Akun
           </button>
-
         </nav>
 
-        {/* Profile Footer Sidebar */}
+        {/* Footer Sidebar (Tombol Keluar) */}
         <div className="p-4 border-t border-slate-100 flex-shrink-0">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium">
+          
+          {/* ========================================== */}
+          {/* 2. PASTIKAN TOMBOL INI MENGGUNAKAN onLogoutClick */}
+          {/* ========================================== */}
+          <button 
+            onClick={onLogoutClick} 
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium cursor-pointer"
+          >
             <LogOut className="w-5 h-5" />
             Keluar
           </button>
+
         </div>
       </aside>
 
