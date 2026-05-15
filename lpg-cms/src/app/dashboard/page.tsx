@@ -8,7 +8,8 @@ import Header from '@/components/layout/Header';
 import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
 import TiketBooking from '@/components/dashboard/TiketBooking';
-import Favorit from '@/components/dashboard/Favorit'; // <-- Import Favorit ditambahkan
+import Favorit from '@/components/dashboard/Favorit';
+import Pengaturan from '@/components/dashboard/pengaturan';
 
 // Data User Sementara
 const currentUser = {
@@ -27,6 +28,7 @@ export default function DashboardPage() {
       case 'Destinations': return 'Eksplorasi';
       case 'Tickets': return 'Tiket & Booking';
       case 'Favorites': return 'Destinasi Favorit';
+      case 'Settings': return 'Pengaturan Akun'; // <-- 2. Judul untuk Pengaturan ditambahkan
       default: return 'Dashboard';
     }
   };
@@ -60,8 +62,11 @@ export default function DashboardPage() {
           {/* Tampilan Tiket & Booking */}
           {activeMenu === 'Tickets' && <TiketBooking />}
           
-          {/* Tampilan Destinasi Favorit (Diperbarui) */}
+          {/* Tampilan Destinasi Favorit */}
           {activeMenu === 'Favorites' && <Favorit />}
+
+          {/* Tampilan Pengaturan (Baru Ditambahkan) */}
+          {activeMenu === 'Settings' && <Pengaturan />}
 
         </main>
       </div>
