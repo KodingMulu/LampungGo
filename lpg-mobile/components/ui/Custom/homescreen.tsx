@@ -43,4 +43,5 @@ const styles = StyleSheet.create({
     cardImage: { width: '100%', height: 150 },
     cardInfo: { padding: 15 },
     cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#333' },
+    cardLocation: { fontSize: 14, color: '#666', marginTop: 5 },
 });
