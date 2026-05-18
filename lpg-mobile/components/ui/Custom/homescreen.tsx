@@ -19,7 +19,7 @@ export default function HomeScreen() {
 </View>
  </TouchableOpacity>
  );
-}
+
 
 return (
     <SafeAreaView style={styles.container}>
@@ -33,3 +33,8 @@ return (
       />
     </SafeAreaView>
   );
+}
+
+const styles = StyleSheet.create({
+    
+});
