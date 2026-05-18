@@ -12,6 +12,7 @@ const wisataLampung = [
 export default function HomeScreen() { 
     const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.card}>
+        <Image source={{ uri: item.image }} style={styles.cardImage} />
 
     </TouchableOpacity>
 
