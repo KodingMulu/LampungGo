@@ -6,4 +6,5 @@ const wisataLampung = [
     { id: '1', name: 'Pulau Pahawang', location: 'Pesawaran, Lampung', image: 'https://picsum.photos/400/200?random=1' },
     { id: '2', name: 'Taman Nasional Way Kambas', location: 'Lampung Timur', image: 'https://picsum.photos/400/200?random=2' },
     { id: '3', name: 'Teluk Kiluan', location: 'Tanggamus, Lampung', image: 'https://picsum.photos/400/200?random=3' },
+    { id: '4', name: 'Menara Siger', location: 'Bakauheni, Lampung Selatan', image: 'https://picsum.photos/400/200?random=4' },
 ];
