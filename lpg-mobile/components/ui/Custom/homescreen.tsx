@@ -15,6 +15,7 @@ export default function HomeScreen() {
         <Image source={{ uri: item.image }} style={styles.cardImage} />
         <View style={styles.cardInfo}>
             <Text style={styles.cardTitle}>{item.name}</Text>
+            <Text style={styles.cardLocation}>{item.location}</Text>
 
         </View>
 
