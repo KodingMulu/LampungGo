@@ -10,8 +10,11 @@ const wisataLampung = [
 ];
 
 export default function HomeScreen() { 
+    const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.card}>
-        
+
     </TouchableOpacity>
+
+    );
 
 }
