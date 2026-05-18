@@ -40,4 +40,5 @@ const styles = StyleSheet.create({
     headerTitle: { fontSize: 24, fontWeight: 'bold', margin: 20, color: '#333' },
     listContainer: { paddingHorizontal: 20, paddingBottom: 20 },
     card: { backgroundColor: '#FFF', borderRadius: 12, marginBottom: 20, overflow: 'hidden', elevation: 3 },
+    cardImage: { width: '100%', height: 150 },
 });
