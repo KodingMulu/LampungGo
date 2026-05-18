@@ -16,11 +16,20 @@ export default function HomeScreen() {
         <View style={styles.cardInfo}>
             <Text style={styles.cardTitle}>{item.name}</Text>
             <Text style={styles.cardLocation}>{item.location}</Text>
-
-        </View>
-
-    </TouchableOpacity>
-
-    );
-
+</View>
+ </TouchableOpacity>
+ );
 }
+
+return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.headerTitle}>Jelajah Lampung</Text>
+      <FlatList
+        data={wisataLampung}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
