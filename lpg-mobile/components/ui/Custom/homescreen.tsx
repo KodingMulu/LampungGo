@@ -38,4 +38,5 @@ return (
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#F7F9FC' },
     headerTitle: { fontSize: 24, fontWeight: 'bold', margin: 20, color: '#333' },
+    listContainer: { paddingHorizontal: 20, paddingBottom: 20 },
 });
