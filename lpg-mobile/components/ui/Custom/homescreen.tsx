@@ -8,3 +8,7 @@ const wisataLampung = [
     { id: '3', name: 'Teluk Kiluan', location: 'Tanggamus, Lampung', image: 'https://picsum.photos/400/200?random=3' },
     { id: '4', name: 'Menara Siger', location: 'Bakauheni, Lampung Selatan', image: 'https://picsum.photos/400/200?random=4' },
 ];
+
+export default function HomeScreen() { 
+    
+}
