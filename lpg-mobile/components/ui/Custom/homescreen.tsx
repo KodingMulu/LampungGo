@@ -42,4 +42,5 @@ const styles = StyleSheet.create({
     card: { backgroundColor: '#FFF', borderRadius: 12, marginBottom: 20, overflow: 'hidden', elevation: 3 },
     cardImage: { width: '100%', height: 150 },
     cardInfo: { padding: 15 },
+    cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#333' },
 });
