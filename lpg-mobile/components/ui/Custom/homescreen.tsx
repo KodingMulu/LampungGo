@@ -14,7 +14,8 @@ export default function HomeScreen() {
     <TouchableOpacity style={styles.card}>
         <Image source={{ uri: item.image }} style={styles.cardImage} />
         <View style={styles.cardInfo}>
-            
+            <Text style={styles.cardTitle}>{item.name}</Text>
+
         </View>
 
     </TouchableOpacity>
