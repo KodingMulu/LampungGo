@@ -5,12 +5,13 @@ import React, { useState } from 'react';
 // Pastikan path import ini sesuai dengan nama folder yang Anda buat di src/components
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
+import BottomNav from '@/components/layout/BottomNav'; // <-- 1. Import BottomNav ditambahkan
 import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
 import TiketBooking from '@/components/dashboard/TiketBooking';
 import Favorit from '@/components/dashboard/Favorit';
 import Pengaturan from '@/components/dashboard/pengaturan'; // <-- Huruf P sudah diperbaiki menjadi besar
-import ModalKeluar from '@/components/layout/ModalKeluar'; // <-- 1. Import ModalKeluar
+import ModalKeluar from '@/components/layout/ModalKeluar';
 
 // Data User Sementara
 const currentUser = {
@@ -23,7 +24,7 @@ export default function DashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState('Overview'); 
   
-  // 2. State untuk mengatur kapan Pop-up Keluar muncul
+  // State untuk mengatur kapan Pop-up Keluar muncul
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const getPageTitle = () => {
@@ -37,7 +38,7 @@ export default function DashboardPage() {
     }
   };
 
-  // 3. Fungsi yang dijalankan jika tombol "Ya, Keluar" ditekan di dalam pop-up
+  // Fungsi yang dijalankan jika tombol "Ya, Keluar" ditekan di dalam pop-up
   const handleConfirmLogout = () => {
     // Nantinya logika untuk menghapus sesi/token dan redirect ke halaman Login diletakkan di sini
     alert("Berhasil Keluar! Anda akan dialihkan ke halaman Login.");
@@ -47,7 +48,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex overflow-hidden relative">
       
-      {/* 4. Berikan fungsi onLogoutClick ke Sidebar agar Sidebar bisa memunculkan pop-up */}
+      {/* Berikan fungsi onLogoutClick ke Sidebar agar Sidebar bisa memunculkan pop-up */}
       <Sidebar 
         isOpen={isSidebarOpen} 
         onClose={() => setIsSidebarOpen(false)} 
@@ -62,8 +63,8 @@ export default function DashboardPage() {
           onMenuClick={() => setIsSidebarOpen(true)}
           title={getPageTitle()}
           user={currentUser}
-          onSettingsClick={() => setActiveMenu('Settings')} // <-- UPDATE: Mengarahkan ke Pengaturan
-          onLogoutClick={() => setIsLogoutModalOpen(true)}  // <-- UPDATE: Memunculkan Modal Keluar
+          onSettingsClick={() => setActiveMenu('Settings')} // Mengarahkan ke Pengaturan
+          onLogoutClick={() => setIsLogoutModalOpen(true)}  // Memunculkan Modal Keluar
         />
 
         <main className="flex-1 overflow-y-auto scroll-smooth">
@@ -78,7 +79,13 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      {/* 5. Tampilan Pop-up (Modal) Keluar dipasang di luar susunan halaman */}
+      {/* 2. Komponen BottomNav dipasang di sini agar muncul di mode HP */}
+      <BottomNav 
+        activeMenu={activeMenu} 
+        setActiveMenu={setActiveMenu} 
+      />
+
+      {/* Tampilan Pop-up (Modal) Keluar dipasang di luar susunan halaman */}
       <ModalKeluar 
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)} // Menutup pop-up jika diklik 'Batal'
