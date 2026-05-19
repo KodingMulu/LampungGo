@@ -13,6 +13,9 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+// Import komponen modal pembayaran
+import ModalPembayaran from './ModalPembayaran';
+
 type BookingStatus = 'Terkonfirmasi' | 'Menunggu' | 'Selesai' | 'Dibatalkan';
 
 interface BookingRecord {
@@ -69,6 +72,9 @@ const myBookings: BookingRecord[] = [
 
 export default function TiketBooking() {
   const [activeTab, setActiveTab] = useState<'Aktif' | 'Riwayat'>('Aktif');
+  
+  // State untuk menyimpan data tiket yang sedang dibayar (untuk memicu Modal)
+  const [paymentBooking, setPaymentBooking] = useState<BookingRecord | null>(null);
 
   const displayedBookings = myBookings.filter(booking => {
     if (activeTab === 'Aktif') {
@@ -202,7 +208,10 @@ export default function TiketBooking() {
                       <Download className="w-4 h-4" /> E-Tiket
                     </button>
                   ) : booking.status === 'Menunggu' ? (
-                    <button className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-amber-500 text-white font-bold rounded-2xl hover:bg-amber-600 transition-colors active:scale-95 shadow-lg shadow-amber-500/20">
+                    <button 
+                      onClick={() => setPaymentBooking(booking)}
+                      className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-amber-500 text-white font-bold rounded-2xl hover:bg-amber-600 transition-colors active:scale-95 shadow-lg shadow-amber-500/20 animate-pulse"
+                    >
                       Bayar Sekarang
                     </button>
                   ) : (
@@ -231,6 +240,14 @@ export default function TiketBooking() {
           </button>
         </div>
       )}
+
+      {/* Memanggil Komponen Modal Pembayaran */}
+      <ModalPembayaran 
+        isOpen={paymentBooking !== null}
+        onClose={() => setPaymentBooking(null)}
+        booking={paymentBooking}
+      />
+
     </div>
   );
 }
