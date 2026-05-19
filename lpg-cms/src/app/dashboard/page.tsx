@@ -9,7 +9,7 @@ import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
 import TiketBooking from '@/components/dashboard/TiketBooking';
 import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan'; // Huruf P besar
+import Pengaturan from '@/components/dashboard/pengaturan'; // <-- Huruf P sudah diperbaiki menjadi besar
 import ModalKeluar from '@/components/layout/ModalKeluar'; // <-- 1. Import ModalKeluar
 
 // Data User Sementara
@@ -62,6 +62,8 @@ export default function DashboardPage() {
           onMenuClick={() => setIsSidebarOpen(true)}
           title={getPageTitle()}
           user={currentUser}
+          onSettingsClick={() => setActiveMenu('Settings')} // <-- UPDATE: Mengarahkan ke Pengaturan
+          onLogoutClick={() => setIsLogoutModalOpen(true)}  // <-- UPDATE: Memunculkan Modal Keluar
         />
 
         <main className="flex-1 overflow-y-auto scroll-smooth">
