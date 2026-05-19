@@ -14,6 +14,9 @@ import {
   Landmark
 } from 'lucide-react';
 
+// Import komponen modal yang sudah dibuat sebelumnya
+import ModalDestinasi from './ModalDestinasi';
+
 type Category = 'Semua' | 'Pantai & Pulau' | 'Alam & Margasatwa' | 'Pegunungan' | 'Budaya & Sejarah';
 
 interface Destination {
@@ -64,6 +67,9 @@ const allDestinations: Destination[] = [
 export default function Eksplorasi() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<Category>('Semua');
+  
+  // State untuk melacak destinasi mana yang sedang diklik/dipilih untuk modal
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
 
   const categories: { label: Category; icon: React.ReactNode }[] = [
     { label: 'Semua', icon: <Search className="w-4 h-4" /> },
@@ -81,7 +87,7 @@ export default function Eksplorasi() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 w-full p-6 lg:p-10 pb-20">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 w-full p-6 lg:p-10 pb-20 relative">
       
       {/* Header */}
       <div>
@@ -134,6 +140,8 @@ export default function Eksplorasi() {
           {filteredDestinations.map((dest) => (
             <div 
               key={dest.id} 
+              // Aksi klik untuk membuka modal
+              onClick={() => setSelectedDestination(dest)}
               className="group bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer"
             >
               {/* Image Container dengan Gradient Overlay */}
@@ -155,7 +163,14 @@ export default function Eksplorasi() {
                 </div>
 
                 {/* Tombol Favorit (Muncul saat di hover) */}
-                <button className="absolute top-6 right-6 p-3 bg-white/30 backdrop-blur-md rounded-full text-white hover:bg-red-500 transition-all duration-300 z-10 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110">
+                <button 
+                  // e.stopPropagation() mencegah modal terbuka saat mengklik tombol favorit
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Logika simpan ke favorit bisa ditambahkan di sini nanti
+                  }}
+                  className="absolute top-6 right-6 p-3 bg-white/30 backdrop-blur-md rounded-full text-white hover:bg-red-500 transition-all duration-300 z-10 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 hover:scale-110"
+                >
                   <Heart className="w-5 h-5" />
                 </button>
 
@@ -204,6 +219,14 @@ export default function Eksplorasi() {
           </p>
         </div>
       )}
+
+      {/* Memanggil Komponen Modal Destinasi */}
+      <ModalDestinasi 
+        isOpen={selectedDestination !== null}
+        onClose={() => setSelectedDestination(null)}
+        destination={selectedDestination}
+      />
+
     </div>
   );
 }
