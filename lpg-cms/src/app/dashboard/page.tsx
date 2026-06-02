@@ -13,8 +13,9 @@ import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
 import TiketBooking from '@/components/dashboard/TiketBooking';
 import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan'; // Sudah diperbaiki (P besar)
+import Pengaturan from '@/components/dashboard/pengaturan'; // Pastikan nama file Pengaturan.tsx
 import ItineraryPlanner from '@/components/dashboard/ItineraryPlanner';
+import SplitBill from '@/components/dashboard/SplitBill'; // Import fitur baru
 
 // Data User
 const currentUser = {
@@ -34,6 +35,7 @@ export default function DashboardPage() {
       case 'Destinations': return 'Eksplorasi';
       case 'Tickets': return 'Tiket & Booking';
       case 'Itinerary': return 'Rencana Perjalanan';
+      case 'SplitBill': return 'Kalkulator Patungan'; // Judul untuk menu Split Bill
       case 'Favorites': return 'Destinasi Favorit';
       case 'Settings': return 'Pengaturan Akun';
       default: return 'Dashboard';
@@ -71,6 +73,7 @@ export default function DashboardPage() {
           {activeMenu === 'Destinations' && <Eksplorasi />}
           {activeMenu === 'Tickets' && <TiketBooking />}
           {activeMenu === 'Itinerary' && <ItineraryPlanner />}
+          {activeMenu === 'SplitBill' && <SplitBill />} {/* Rendering komponen SplitBill */}
           {activeMenu === 'Favorites' && <Favorit />}
           {activeMenu === 'Settings' && <Pengaturan />}
         </main>
