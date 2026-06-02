@@ -139,6 +139,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       role: user.role,
+      regionId: user.regionId,
     };
 
     return {
@@ -272,13 +273,22 @@ export class AuthService {
     }
   }
 
-  async syncRoleUpdate(accountId: string, newRole: Role) {
+  async syncRoleUpdate(accountId: string, newRole: Role, region?: string) {
     await this.prisma.user.update({
       where: {
         id: accountId,
       },
       data: {
         role: newRole,
+        regionId: region,
+      },
+    });
+  }
+
+  async deletedUser(accountId: string) {
+    await this.prisma.user.delete({
+      where: {
+        id: accountId,
       },
     });
   }

@@ -143,6 +143,7 @@ export class UsersService {
     this.authClient.emit('role_updated', {
       accountId: updateUsers.accountId,
       role: updateUsers.role,
+      regionId: updateUsers.regionId,
     });
 
     return updateUsers;
@@ -204,6 +205,74 @@ export class UsersService {
     return this.prisma.userProfile.update({
       where: { id: mitraId },
       data: { mitraStatus: dto.status },
+    });
+  }
+
+  /**
+   * Feature Admin Wilayah
+   * Manage Mitra Wilayah
+   */
+  async getRegionalStats(regionId: string) {
+    if (!regionId)
+      throw new BadRequestException(
+        'Akun Anda belum ditugaskan ke wilayah manapun',
+      );
+
+    const [totalMitra, pendingMitra, approvedMitra, rejectedMitra] =
+      await Promise.all([
+        this.prisma.userProfile.count({
+          where: { role: Role.MITRA, regionId },
+        }),
+        this.prisma.userProfile.count({
+          where: {
+            role: Role.MITRA,
+            regionId,
+            mitraStatus: MitraStatus.PENDING,
+          },
+        }),
+        this.prisma.userProfile.count({
+          where: {
+            role: Role.MITRA,
+            regionId,
+            mitraStatus: MitraStatus.APPROVED,
+          },
+        }),
+        this.prisma.userProfile.count({
+          where: {
+            role: Role.MITRA,
+            regionId,
+            mitraStatus: MitraStatus.REJECTED,
+          },
+        }),
+      ]);
+
+    return {
+      regionId,
+      totalMitra,
+      pendingMitra,
+      approvedMitra,
+      rejectedMitra,
+    };
+  }
+
+  async getRegionalMitra(regionId: string, statusFilter?: MitraStatus) {
+    if (!regionId)
+      throw new BadRequestException(
+        'Akun Anda belum ditugaskan ke wilayah manapun',
+      );
+
+    const whereClause: Prisma.UserProfileWhereInput = {
+      role: Role.MITRA,
+      regionId: regionId,
+    };
+
+    if (statusFilter) {
+      whereClause.mitraStatus = statusFilter;
+    }
+
+    return this.prisma.userProfile.findMany({
+      where: whereClause,
+      orderBy: { createdAt: 'desc' },
     });
   }
 }

@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ServiceType {
+  HOMESTAY
+  TOUR_GUIDE
+  UMKM_PRODUCT
+  TICKET
+}
+
+model Destination {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  location    String
+  regionId    String   
+  imageUrl    String?
+  latitude    Float?
+  longitude   Float?
+  services    MitraService[]
+  reviews     Review[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MitraService {
+  id            String      @id @default(uuid())
+  mitraId       String      // ID UserProfile dari user-service
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  type          ServiceType
+  name          String
+  description   String
+  price         Decimal
+  imageUrl      String?
+  isAvailable   Boolean     @default(true)
+  reviews       Review[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Review {
+  id             String        @id @default(uuid())
+  userId         String       
+  destinationId  String?
+  destination    Destination?  @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  mitraServiceId String?
+  mitraService   MitraService? @relation(fields: [mitraServiceId], references: [id], onDelete: Cascade)
+  rating         Int           
+  comment        String?
+
+  createdAt      DateTime      @default(now())
+}

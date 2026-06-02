@@ -8,7 +8,7 @@ import {
   VerifyDto,
   VerifyResetOtpDto,
 } from './dto/auth.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtPayload } from './types/auth-payload.type';
 import { Role } from '@prisma/client';
 
@@ -57,7 +57,18 @@ export class AuthController {
   }
 
   @MessagePattern({ cmd: 'role_updated' })
-  async handleRoleUpdated(@Payload() data: { accountId: string; role: Role }) {
-    await this.authService.syncRoleUpdate(data.accountId, data.role);
+  async handleRoleUpdated(
+    @Payload() data: { accountId: string; role: Role; regionId: string },
+  ) {
+    await this.authService.syncRoleUpdate(
+      data.accountId,
+      data.role,
+      data.regionId,
+    );
+  }
+
+  @EventPattern('account_deleted')
+  async handleAccountDeleted(@Payload() data: { accountId: string }) {
+    await this.authService.deletedUser(data.accountId);
   }
 }
