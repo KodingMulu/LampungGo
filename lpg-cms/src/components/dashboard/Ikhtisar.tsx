@@ -10,7 +10,10 @@ import {
   ChevronRight, 
   ArrowRight,
   Star,
-  Clock
+  Clock,
+  Droplets, // <-- Icon tambahan untuk cuaca
+  Wind,     // <-- Icon tambahan untuk cuaca
+  Sparkles  // <-- Icon tambahan untuk promo
 } from 'lucide-react';
 
 interface Destination {
@@ -30,7 +33,6 @@ interface Booking {
   image: string;
 }
 
-// Data destinasi ditambahkan menjadi 4 agar efek scroll ke samping terlihat
 const recommendedDestinations: Destination[] = [
   { 
     id: "d1", 
@@ -182,70 +184,110 @@ export default function Ikhtisar() {
       {/* Grid Utama Bawah */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Kolom Kiri: CAROUSEL REKOMENDASI (Gaya Geser Samping) */}
-        <div className="lg:col-span-2 space-y-6 overflow-hidden">
-          <div className="flex items-end justify-between px-2">
-            <div>
-              <h3 className="text-2xl font-extrabold text-slate-800">Pilihan Teratas</h3>
-              <p className="text-slate-500 font-medium mt-1">Destinasi yang paling sering dikunjungi minggu ini.</p>
+        {/* Kolom Kiri: CAROUSEL REKOMENDASI & BANNER PROMO */}
+        <div className="lg:col-span-2 space-y-8 overflow-hidden">
+          
+          {/* Bagian Carousel */}
+          <div>
+            <div className="flex items-end justify-between px-2 mb-6">
+              <div>
+                <h3 className="text-2xl font-extrabold text-slate-800">Pilihan Teratas</h3>
+                <p className="text-slate-500 font-medium mt-1">Destinasi yang paling sering dikunjungi minggu ini.</p>
+              </div>
+              <button className="hidden sm:flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700 bg-emerald-50 px-4 py-2 rounded-full transition-colors group">
+                Lihat Semua <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
-            <button className="hidden sm:flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700 bg-emerald-50 px-4 py-2 rounded-full transition-colors group">
-              Lihat Semua <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+
+            {/* Wrapper Carousel Horizontal */}
+            <div className="flex overflow-x-auto gap-6 pb-6 pt-2 px-2 -mx-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {recommendedDestinations.map((dest) => (
+                <div 
+                  key={dest.id} 
+                  className="flex-none w-[280px] sm:w-[320px] snap-center group bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer"
+                >
+                  <div className="relative h-56 overflow-hidden p-2">
+                    <div className="w-full h-full rounded-[1.5rem] overflow-hidden relative">
+                      <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-80" />
+                      <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-white font-semibold text-sm">
+                        <Star className="w-4 h-4 text-amber-400 fill-amber-400" /> {dest.rating}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6 pt-5 flex flex-col flex-1">
+                    <h4 className="font-extrabold text-slate-800 text-xl line-clamp-1 group-hover:text-emerald-600 transition-colors duration-300 mb-1">{dest.name}</h4>
+                    <p className="text-slate-500 text-sm flex items-center gap-1.5 mb-4 font-medium">
+                      <MapPin className="w-4 h-4 text-emerald-500 flex-shrink-0" /> <span className="truncate">{dest.location}</span>
+                    </p>
+                    <div className="w-full h-px bg-slate-100 my-4" />
+                    <div className="mt-auto flex items-end justify-between">
+                      <div>
+                        <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase block mb-1">Mulai dari</span>
+                        <p className="font-extrabold text-lg text-emerald-600">{dest.price}</p>
+                      </div>
+                      <button className="w-12 h-12 flex items-center justify-center bg-slate-50 text-emerald-600 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 active:scale-90">
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Banner Promo Eksklusif */}
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-500 rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-white shadow-lg shadow-emerald-500/20 relative overflow-hidden group">
+            {/* Ornamen Latar Belakang */}
+            <div className="absolute top-0 right-0 p-4 opacity-10 transform translate-x-1/4 -translate-y-1/4 group-hover:scale-110 transition-transform duration-700">
+              <Sparkles className="w-48 h-48" />
+            </div>
+            
+            <div className="relative z-10 text-center sm:text-left">
+              <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg text-[10px] font-extrabold uppercase tracking-wider mb-3">
+                Promo Terbatas
+              </div>
+              <h4 className="text-xl font-extrabold mb-1">Diskon 20% Paket Keluarga!</h4>
+              <p className="text-emerald-50 text-sm font-medium">Berlaku untuk pemesanan tur Way Kambas akhir pekan ini.</p>
+            </div>
+            <button className="relative z-10 w-full sm:w-auto px-6 py-3.5 bg-white text-emerald-700 font-bold rounded-xl hover:bg-emerald-50 transition-colors active:scale-95 whitespace-nowrap">
+              Klaim Promo
             </button>
           </div>
 
-          {/* Wrapper Carousel Horizontal */}
-          <div className="flex overflow-x-auto gap-6 pb-6 pt-2 px-2 -mx-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {recommendedDestinations.map((dest) => (
-              <div 
-                key={dest.id} 
-                className="flex-none w-[280px] sm:w-[320px] snap-center group bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer"
-              >
-                <div className="relative h-56 overflow-hidden p-2">
-                  <div className="w-full h-full rounded-[1.5rem] overflow-hidden relative">
-                    <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-80" />
-                    <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-white font-semibold text-sm">
-                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" /> {dest.rating}
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6 pt-5 flex flex-col flex-1">
-                  <h4 className="font-extrabold text-slate-800 text-xl line-clamp-1 group-hover:text-emerald-600 transition-colors duration-300 mb-1">{dest.name}</h4>
-                  <p className="text-slate-500 text-sm flex items-center gap-1.5 mb-4 font-medium">
-                    <MapPin className="w-4 h-4 text-emerald-500 flex-shrink-0" /> <span className="truncate">{dest.location}</span>
-                  </p>
-                  <div className="w-full h-px bg-slate-100 my-4" />
-                  <div className="mt-auto flex items-end justify-between">
-                    <div>
-                      <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase block mb-1">Mulai dari</span>
-                      <p className="font-extrabold text-lg text-emerald-600">{dest.price}</p>
-                    </div>
-                    <button className="w-12 h-12 flex items-center justify-center bg-slate-50 text-emerald-600 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 active:scale-90">
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Kolom Kanan: Widget Cuaca & Trip Mendatang */}
-        <div className="space-y-6">
-          {/* Widget Cuaca */}
+        <div className="space-y-8">
+          
+          {/* Widget Cuaca (Telah Diperbarui dengan Detail Angin & Kelembapan) */}
           <div className="bg-gradient-to-br from-sky-400 via-blue-500 to-blue-600 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
             <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
-            <div className="flex justify-between items-start mb-8 relative z-10">
+            
+            <div className="flex justify-between items-start mb-6 relative z-10">
               <div>
                 <p className="font-semibold text-sky-100 text-sm tracking-wide uppercase mb-1">Cuaca Hari Ini</p>
                 <h4 className="text-2xl font-bold">Bandar Lampung</h4>
               </div>
               <Sun className="w-12 h-12 text-yellow-300 drop-shadow-md animate-spin-slow" />
             </div>
+            
             <div className="flex items-end gap-4 relative z-10">
               <span className="text-6xl font-black tracking-tighter">29°</span>
-              <span className="text-sky-100 font-medium pb-2 text-lg">Cerah Berawan</span>
+              <span className="text-sky-100 font-medium pb-2 text-lg">Cerah</span>
+            </div>
+
+            {/* Detail Cuaca Tambahan */}
+            <div className="mt-8 pt-6 border-t border-white/20 flex justify-between relative z-10">
+              <div className="flex items-center gap-2">
+                <Droplets className="w-4 h-4 text-sky-200" />
+                <span className="text-sm font-medium text-sky-50">78%</span>
+              </div>
+              <div className="w-px h-5 bg-white/20"></div>
+              <div className="flex items-center gap-2">
+                <Wind className="w-4 h-4 text-sky-200" />
+                <span className="text-sm font-medium text-sky-50">12 km/j</span>
+              </div>
             </div>
           </div>
 
