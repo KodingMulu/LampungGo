@@ -9,7 +9,8 @@ import {
   Settings, 
   LogOut, 
   X, 
-  Calendar 
+  Calendar,
+  Receipt // Import ikon untuk Split Bill
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -25,7 +26,8 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
     { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Ikhtisar' },
     { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplorasi' },
     { id: 'Tickets', icon: <Ticket className="w-5 h-5" />, label: 'Tiket & Booking' },
-    { id: 'Itinerary', icon: <Calendar className="w-5 h-5" />, label: 'Rencana Perjalanan' }, // Menu Baru
+    { id: 'Itinerary', icon: <Calendar className="w-5 h-5" />, label: 'Rencana Perjalanan' },
+    { id: 'SplitBill', icon: <Receipt className="w-5 h-5" />, label: 'Patungan' }, // Menu Baru
     { id: 'Favorites', icon: <Heart className="w-5 h-5" />, label: 'Favorit' },
   ];
 
