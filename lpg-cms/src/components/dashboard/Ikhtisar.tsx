@@ -10,7 +10,7 @@ import {
   ChevronRight, 
   ArrowRight,
   Star,
-  Clock // <-- Import Clock ditambahkan di sini
+  Clock
 } from 'lucide-react';
 
 interface Destination {
@@ -30,6 +30,7 @@ interface Booking {
   image: string;
 }
 
+// Data destinasi ditambahkan menjadi 4 agar efek scroll ke samping terlihat
 const recommendedDestinations: Destination[] = [
   { 
     id: "d1", 
@@ -41,11 +42,27 @@ const recommendedDestinations: Destination[] = [
   },
   { 
     id: "d2", 
-    name: "Taman Nasional Way Kambas", 
+    name: "Way Kambas", 
     location: "Lampung Timur", 
     image: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", 
     rating: 4.9, 
     price: "Rp 50.000" 
+  },
+  { 
+    id: "d3", 
+    name: "Pantai Gigi Hiu", 
+    location: "Tanggamus", 
+    image: "https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", 
+    rating: 4.7, 
+    price: "Rp 20.000" 
+  },
+  { 
+    id: "d4", 
+    name: "Teluk Kiluan", 
+    location: "Tanggamus", 
+    image: "https://images.unsplash.com/photo-1607153333881-22fb1387d7b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", 
+    rating: 4.6, 
+    price: "Rp 150.000" 
   }
 ];
 
@@ -115,7 +132,7 @@ export default function Ikhtisar() {
         ))}
       </div>
 
-      {/* JADWAL PERJALANAN TERDEKAT (BAGIAN BARU DITAMBAHKAN) */}
+      {/* JADWAL PERJALANAN TERDEKAT */}
       <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-extrabold text-slate-800">Jadwal Terdekat Anda</h3>
@@ -161,13 +178,12 @@ export default function Ikhtisar() {
           </div>
         </div>
       </div>
-      {/* AKHIR JADWAL PERJALANAN TERDEKAT */}
 
       {/* Grid Utama Bawah */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Kolom Rekomendasi (Gaya Card Modern) */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* Kolom Kiri: CAROUSEL REKOMENDASI (Gaya Geser Samping) */}
+        <div className="lg:col-span-2 space-y-6 overflow-hidden">
           <div className="flex items-end justify-between px-2">
             <div>
               <h3 className="text-2xl font-extrabold text-slate-800">Pilihan Teratas</h3>
@@ -178,9 +194,13 @@ export default function Ikhtisar() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Wrapper Carousel Horizontal */}
+          <div className="flex overflow-x-auto gap-6 pb-6 pt-2 px-2 -mx-2 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {recommendedDestinations.map((dest) => (
-              <div key={dest.id} className="group bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer">
+              <div 
+                key={dest.id} 
+                className="flex-none w-[280px] sm:w-[320px] snap-center group bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer"
+              >
                 <div className="relative h-56 overflow-hidden p-2">
                   <div className="w-full h-full rounded-[1.5rem] overflow-hidden relative">
                     <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" />
@@ -211,7 +231,7 @@ export default function Ikhtisar() {
           </div>
         </div>
 
-        {/* Kolom Widget Sidebar */}
+        {/* Kolom Kanan: Widget Cuaca & Trip Mendatang */}
         <div className="space-y-6">
           {/* Widget Cuaca */}
           <div className="bg-gradient-to-br from-sky-400 via-blue-500 to-blue-600 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
