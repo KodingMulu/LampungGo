@@ -8,20 +8,16 @@ import {
   Heart, 
   Settings, 
   LogOut, 
-  X 
+  X, 
+  Calendar 
 } from 'lucide-react';
 
-// ==========================================
-// 1. PASTIKAN BAGIAN INI ADA!
-// Di sinilah kita memberi tahu TypeScript bahwa komponen
-// Sidebar boleh menerima fungsi onLogoutClick dari luar.
-// ==========================================
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
-  onLogoutClick?: () => void; // <-- Tanda '?' berarti properti ini opsional (boleh ada, boleh tidak)
+  onLogoutClick?: () => void;
 }
 
 export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, onLogoutClick }: SidebarProps) {
@@ -29,6 +25,7 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
     { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Ikhtisar' },
     { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplorasi' },
     { id: 'Tickets', icon: <Ticket className="w-5 h-5" />, label: 'Tiket & Booking' },
+    { id: 'Itinerary', icon: <Calendar className="w-5 h-5" />, label: 'Rencana Perjalanan' }, // Menu Baru
     { id: 'Favorites', icon: <Heart className="w-5 h-5" />, label: 'Favorit' },
   ];
 
@@ -50,7 +47,6 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
           <button 
             className="lg:hidden p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
             onClick={onClose}
-            aria-label="Tutup menu"
           >
             <X className="w-5 h-5" />
           </button>
@@ -100,12 +96,8 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
           </button>
         </nav>
 
-        {/* Footer Sidebar (Tombol Keluar) */}
+        {/* Footer Sidebar */}
         <div className="p-4 border-t border-slate-100 flex-shrink-0">
-          
-          {/* ========================================== */}
-          {/* 2. PASTIKAN TOMBOL INI MENGGUNAKAN onLogoutClick */}
-          {/* ========================================== */}
           <button 
             onClick={onLogoutClick} 
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium cursor-pointer"
@@ -113,7 +105,6 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
             <LogOut className="w-5 h-5" />
             Keluar
           </button>
-
         </div>
       </aside>
 
@@ -122,7 +113,6 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
         <div 
           className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden backdrop-blur-sm transition-opacity"
           onClick={onClose}
-          aria-hidden="true"
         />
       )}
     </>

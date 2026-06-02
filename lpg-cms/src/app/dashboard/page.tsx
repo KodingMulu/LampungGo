@@ -5,17 +5,18 @@ import React, { useState } from 'react';
 // Import komponen UI layout
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
-import BottomNav from '@/components/layout/BottomNav'; // <-- 1. IMPORT BOTTOM NAV
+import BottomNav from '@/components/layout/BottomNav';
 import ModalKeluar from '@/components/layout/ModalKeluar';
 
 // Import komponen konten Dashboard
 import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
-import TiketBooking from '@/components/dashboard/TiketBooking';
+import TiketBooking from '@/components/dashboard/TiketBooking'; // Halaman Tiket
 import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan'; // <-- Huruf P wajib besar
+import Pengaturan from '@/components/dashboard/pengaturan';
+import ItineraryPlanner from '@/components/dashboard/ItineraryPlanner'; // Fitur Baru
 
-// Data User Sementara
+// Data User
 const currentUser = {
   name: "Raden Intan",
   role: "Wisatawan",
@@ -32,6 +33,7 @@ export default function DashboardPage() {
       case 'Overview': return 'Ikhtisar';
       case 'Destinations': return 'Eksplorasi';
       case 'Tickets': return 'Tiket & Booking';
+      case 'Itinerary': return 'Rencana Perjalanan';
       case 'Favorites': return 'Destinasi Favorit';
       case 'Settings': return 'Pengaturan Akun';
       default: return 'Dashboard';
@@ -39,14 +41,13 @@ export default function DashboardPage() {
   };
 
   const handleConfirmLogout = () => {
-    alert("Berhasil Keluar! Anda akan dialihkan ke halaman Login.");
+    alert("Berhasil Keluar!");
     setIsLogoutModalOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex overflow-hidden relative">
       
-      {/* Sidebar untuk mode Desktop & Tablet */}
       <Sidebar 
         isOpen={isSidebarOpen} 
         onClose={() => setIsSidebarOpen(false)} 
@@ -56,7 +57,6 @@ export default function DashboardPage() {
       />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        
         <Header 
           onMenuClick={() => setIsSidebarOpen(true)}
           title={getPageTitle()}
@@ -65,17 +65,17 @@ export default function DashboardPage() {
           onLogoutClick={() => setIsLogoutModalOpen(true)}  
         />
 
-        {/* Area Konten Utama (Scrollable) */}
-        <main className="flex-1 overflow-y-auto scroll-smooth pb-16 lg:pb-0">
+        {/* Konten Utama: Sekarang Tiket dan Itinerary dipisah */}
+        <main className="flex-1 overflow-y-auto scroll-smooth pb-24 lg:pb-0">
           {activeMenu === 'Overview' && <Ikhtisar />}
           {activeMenu === 'Destinations' && <Eksplorasi />}
           {activeMenu === 'Tickets' && <TiketBooking />}
+          {activeMenu === 'Itinerary' && <ItineraryPlanner />}
           {activeMenu === 'Favorites' && <Favorit />}
           {activeMenu === 'Settings' && <Pengaturan />}
         </main>
       </div>
 
-      {/* 2. PASANG BOTTOM NAV DI SINI (Akan otomatis sembunyi di Desktop) */}
       <BottomNav 
         activeMenu={activeMenu} 
         setActiveMenu={setActiveMenu} 
@@ -86,7 +86,6 @@ export default function DashboardPage() {
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleConfirmLogout}
       />
-
     </div>
   );
 }
