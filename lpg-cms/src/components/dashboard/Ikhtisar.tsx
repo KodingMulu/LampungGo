@@ -9,7 +9,8 @@ import {
   Sun, 
   ChevronRight, 
   ArrowRight,
-  Star
+  Star,
+  Clock // <-- Import Clock ditambahkan di sini
 } from 'lucide-react';
 
 interface Destination {
@@ -95,7 +96,7 @@ export default function Ikhtisar() {
         </div>
       </div>
 
-      {/* Grid Statistik (Micro-interactions ditambahkan) */}
+      {/* Grid Statistik */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { icon: <MapPin className="text-blue-600 w-7 h-7" />, bg: 'bg-blue-50', label: 'Total Perjalanan', value: '12' },
@@ -113,6 +114,54 @@ export default function Ikhtisar() {
           </div>
         ))}
       </div>
+
+      {/* JADWAL PERJALANAN TERDEKAT (BAGIAN BARU DITAMBAHKAN) */}
+      <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-extrabold text-slate-800">Jadwal Terdekat Anda</h3>
+          <button className="text-sm font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition-colors group">
+            Lihat Semua <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+        
+        <div className="flex flex-col md:flex-row gap-6 items-center p-4 md:p-5 bg-slate-50 hover:bg-slate-100/80 transition-colors rounded-3xl border border-slate-200/60">
+          <div className="relative w-full md:w-56 h-40 flex-shrink-0 rounded-2xl overflow-hidden shadow-sm">
+            <img 
+              src="https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+              alt="Pulau Pahawang" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm text-emerald-700 text-[10px] font-extrabold uppercase tracking-wider rounded-lg shadow-sm">
+              Berangkat 3 Hari Lagi
+            </div>
+          </div>
+          
+          <div className="flex-1 space-y-3 w-full">
+            <div>
+              <h4 className="text-xl font-extrabold text-slate-900 mb-1">One Day Trip Pulau Pahawang</h4>
+              <p className="text-sm font-medium text-slate-500 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-emerald-500" /> Pesawaran, Lampung
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap gap-x-4 gap-y-3 pt-2">
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm">
+                <Calendar className="w-4 h-4 text-emerald-500" /> Sabtu, 20 Mei 2026
+              </div>
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm">
+                <Clock className="w-4 h-4 text-emerald-500" /> 07:30 WIB
+              </div>
+            </div>
+          </div>
+          
+          <div className="w-full md:w-auto mt-4 md:mt-0 md:pl-6 md:border-l border-slate-200">
+            <button className="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-emerald-600 transition-all duration-300 shadow-lg shadow-slate-900/20 active:scale-95">
+              <Ticket className="w-5 h-5" /> E-Tiket
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* AKHIR JADWAL PERJALANAN TERDEKAT */}
 
       {/* Grid Utama Bawah */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -164,7 +213,7 @@ export default function Ikhtisar() {
 
         {/* Kolom Widget Sidebar */}
         <div className="space-y-6">
-          {/* Widget Cuaca (Lebih estetik) */}
+          {/* Widget Cuaca */}
           <div className="bg-gradient-to-br from-sky-400 via-blue-500 to-blue-600 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
             <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
             <div className="flex justify-between items-start mb-8 relative z-10">
@@ -180,9 +229,9 @@ export default function Ikhtisar() {
             </div>
           </div>
 
-          {/* Widget Trip (Rounded corners besar) */}
+          {/* Widget Trip Mendatang */}
           <div className="bg-white rounded-[2rem] p-7 border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
-            <h3 className="text-xl font-extrabold text-slate-800 mb-5">Trip Mendatang</h3>
+            <h3 className="text-xl font-extrabold text-slate-800 mb-5">Riwayat Pesanan</h3>
             <div className="space-y-4">
               {recentBookings.map((booking) => (
                 <div key={booking.id} className="flex gap-4 items-center p-3 hover:bg-slate-50/80 rounded-2xl transition-colors border border-transparent hover:border-slate-100 cursor-pointer group">
