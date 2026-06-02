@@ -11,10 +11,10 @@ import ModalKeluar from '@/components/layout/ModalKeluar';
 // Import komponen konten Dashboard
 import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
-import TiketBooking from '@/components/dashboard/TiketBooking'; // Halaman Tiket
+import TiketBooking from '@/components/dashboard/TiketBooking';
 import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan';
-import ItineraryPlanner from '@/components/dashboard/ItineraryPlanner'; // Fitur Baru
+import Pengaturan from '@/components/dashboard/pengaturan'; // Sudah diperbaiki (P besar)
+import ItineraryPlanner from '@/components/dashboard/ItineraryPlanner';
 
 // Data User
 const currentUser = {
@@ -65,7 +65,7 @@ export default function DashboardPage() {
           onLogoutClick={() => setIsLogoutModalOpen(true)}  
         />
 
-        {/* Konten Utama: Sekarang Tiket dan Itinerary dipisah */}
+        {/* Konten Utama */}
         <main className="flex-1 overflow-y-auto scroll-smooth pb-24 lg:pb-0">
           {activeMenu === 'Overview' && <Ikhtisar />}
           {activeMenu === 'Destinations' && <Eksplorasi />}

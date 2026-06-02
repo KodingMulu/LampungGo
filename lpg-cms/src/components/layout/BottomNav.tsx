@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Compass, Map, Ticket, Heart, Settings } from 'lucide-react';
+import { Compass, Map, Ticket, Heart, Settings, Calendar } from 'lucide-react';
 
 interface BottomNavProps {
   activeMenu: string;
@@ -13,8 +13,8 @@ export default function BottomNav({ activeMenu, setActiveMenu }: BottomNavProps)
     { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Beranda' },
     { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplor' },
     { id: 'Tickets', icon: <Ticket className="w-5 h-5" />, label: 'Tiket' },
+    { id: 'Itinerary', icon: <Calendar className="w-5 h-5" />, label: 'Rencana' }, // Menu Baru
     { id: 'Favorites', icon: <Heart className="w-5 h-5" />, label: 'Favorit' },
-    { id: 'Settings', icon: <Settings className="w-5 h-5" />, label: 'Akun' },
   ];
 
   return (
@@ -29,7 +29,7 @@ export default function BottomNav({ activeMenu, setActiveMenu }: BottomNavProps)
               onClick={() => setActiveMenu(item.id)}
               className="flex flex-col items-center justify-center w-full h-full gap-1 relative group active:scale-95 transition-transform"
             >
-              {/* Indikator Titik Aktif (Muncul melayang di atas ikon yang sedang diklik) */}
+              {/* Indikator Titik Aktif */}
               {isActive && (
                 <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-in zoom-in duration-300" />
               )}
