@@ -18,24 +18,25 @@ export default function BottomNav({ activeMenu, setActiveMenu }: BottomNavProps)
   ];
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-200/60 shadow-[0_-4px_30px_rgba(0,0,0,0.05)] z-40 pb-2 pt-1 px-2 rounded-t-2xl">
-      <div className="flex justify-around items-center h-16">
+    // Membawa desain floating (mengambang) dan membulat
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-200/60 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-40 pb-2 pt-2 px-2 rounded-t-3xl">
+      <div className="flex justify-around items-center h-14">
         {navItems.map((item) => {
           const isActive = activeMenu === item.id;
           return (
             <button
               key={item.id}
               onClick={() => setActiveMenu(item.id)}
-              className="flex flex-col items-center justify-center w-full h-full gap-1 relative group"
+              className="flex flex-col items-center justify-center w-full h-full gap-1 relative group active:scale-95 transition-transform"
             >
-              {/* Indikator Titik Aktif (Di atas ikon) */}
+              {/* Indikator Titik Aktif (Muncul melayang di atas ikon yang sedang diklik) */}
               {isActive && (
-                <span className="absolute top-0 w-1 h-1 rounded-full bg-emerald-500 animate-in zoom-in" />
+                <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-in zoom-in duration-300" />
               )}
               
               <div 
-                className={`p-1.5 rounded-xl transition-all duration-300 mt-1 ${
-                  isActive ? 'text-emerald-600 bg-emerald-50 scale-110' : 'text-slate-400 group-hover:text-slate-600'
+                className={`p-1 rounded-xl transition-all duration-300 ${
+                  isActive ? 'text-emerald-600 scale-110' : 'text-slate-400 group-hover:text-slate-600'
                 }`}
               >
                 {item.icon}
