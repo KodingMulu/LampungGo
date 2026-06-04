@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { 
   KeyRound, 
   Lock, 
@@ -13,7 +15,24 @@ import {
   ArrowLeft
 } from 'lucide-react';
 
+// Interface untuk strict typing
+interface ResetPasswordResponse {
+  message: string;
+}
+
+interface ErrorResponse {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
+
 export default function ChangePasswordPage() {
+  const router = useRouter();
+
+  // State untuk data kredensial dari session
+  const [email, setEmail] = useState<string>('');
+  const [resetToken, setResetToken] = useState<string>('');
+
   // State form
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -32,6 +51,22 @@ export default function ChangePasswordPage() {
     number: false,
     special: false
   });
+
+  // Proteksi Halaman: Hanya izinkan akses jika sudah melewati tahap OTP
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem('reset_email');
+    const storedToken = sessionStorage.getItem('reset_token');
+
+    if (!storedEmail || !storedToken) {
+      // Jika salah satu tidak ada, anggap ilegal dan tendang kembali ke forgot password
+      alert('Akses ditolak. Silakan lakukan permintaan reset sandi dan verifikasi OTP terlebih dahulu.');
+      router.push('/auth/forgot-password');
+    } else {
+      // Jika valid, simpan ke state untuk digunakan di payload API
+      setEmail(storedEmail);
+      setResetToken(storedToken);
+    }
+  }, [router]);
 
   // Evaluasi kekuatan password secara real-time
   useEffect(() => {
@@ -67,21 +102,50 @@ export default function ChangePasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (!isFormValid || !email || !resetToken) return;
     
     setIsLoading(true);
     
     try {
-      // Simulasi pemanggilan API Ganti Password
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log('Password successfully changed');
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
+      
+      const response = await axios.post<ResetPasswordResponse>(`${backendUrl}/api/auth/reset-password`, {
+        email: email,
+        resetToken: resetToken,
+        newPassword: newPassword
+      });
+
+      // Sukses mengubah password
       setIsSuccess(true);
       
-      // Biasanya di sini kita set timeout untuk redirect ke halaman Login
-      // setTimeout(() => router.push('/login'), 2000);
+      // Bersihkan jejak kredensial demi keamanan
+      sessionStorage.removeItem('reset_email');
+      sessionStorage.removeItem('reset_token');
       
-    } catch (error) {
-      console.error('Failed to change password', error);
+      // Otomatis arahkan ke halaman login setelah 3 detik
+      setTimeout(() => {
+        router.push('/auth/login');
+      }, 3000);
+      
+    } catch (error: unknown) {
+      if (axios.isAxiosError<ErrorResponse>(error)) {
+        const errorData = error.response?.data;
+        const errorMessage = Array.isArray(errorData?.message) 
+          ? errorData.message.join(', ') 
+          : errorData?.message || 'Sesi reset password tidak valid atau kedaluwarsa.';
+        
+        alert(errorMessage);
+        
+        // Opsional: Jika token kedaluwarsa dari backend, kita bisa memaksa user ulang dari awal
+        if (error.response?.status === 400 || error.response?.status === 401) {
+          sessionStorage.removeItem('reset_email');
+          sessionStorage.removeItem('reset_token');
+          router.push('/auth/forgot-password');
+        }
+      } else {
+        console.error('Failed to change password', error);
+        alert('Terjadi kesalahan sistem saat mengubah sandi.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -96,10 +160,13 @@ export default function ChangePasswordPage() {
 
       {/* Header Sederhana */}
       <header className="w-full p-6 lg:p-8 relative z-10 flex justify-between items-center max-w-7xl mx-auto">
-        <a href="/login" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group">
+        <button 
+          onClick={() => router.push('/auth/login')}
+          className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group"
+        >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="text-sm font-medium">Batal</span>
-        </a>
+        </button>
         
         <div className="flex items-center gap-2 text-emerald-700">
           <div className="p-1.5 bg-emerald-100 rounded-lg">
@@ -121,14 +188,14 @@ export default function ChangePasswordPage() {
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-3">Sandi Diperbarui!</h2>
               <p className="text-slate-500 mb-8">
-                Kata sandi akun Anda telah berhasil diubah. Silakan masuk kembali menggunakan kata sandi baru Anda.
+                Kata sandi akun Anda telah berhasil diubah. Silakan masuk kembali menggunakan kata sandi baru Anda. Mengalihkan secara otomatis...
               </p>
-              <a 
-                href="/login"
+              <button 
+                onClick={() => router.push('/auth/login')}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg shadow-emerald-600/20"
               >
                 Kembali ke Login
-              </a>
+              </button>
             </div>
           ) : (
             // State: FORM GANTI PASSWORD
