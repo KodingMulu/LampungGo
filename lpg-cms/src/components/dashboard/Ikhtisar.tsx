@@ -1,61 +1,44 @@
 'use client';
 import { motion } from 'framer-motion';
-import { CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Map, Users, MapPin, Tent } from 'lucide-react';
 
-// Mock data berdasarkan Prisma Schema UserProfile
-const pendingMitras = [
-  { id: '1', name: 'Budi Santoso', email: 'budi@gmail.com', region: 'Bandar Lampung', status: 'PENDING' },
-  { id: '2', name: 'Siti Aminah', email: 'siti@homestay.com', region: 'Pesawaran', status: 'PENDING' },
+const stats = [
+  { label: 'Total Wilayah', value: '15', icon: Map, color: 'text-blue-500' },
+  { label: 'Mitra Menunggu Approval', value: '8', icon: Users, color: 'text-amber-500' },
+  { label: 'Total Destinasi', value: '42', icon: MapPin, color: 'text-emerald-500' },
+  { label: 'Layanan Aktif', value: '124', icon: Tent, color: 'text-purple-500' },
 ];
 
-export default function MitraApprovals() {
+export default function DashboardOverview() {
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Persetujuan Mitra</h1>
+    <div className="space-y-8 p-6">
+      <div className="flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800 tracking-tight">Ikhtisar Platform</h1>
+          <p className="text-gray-500 mt-1">Pantau aktivitas LampungGo secara real-time.</p>
+        </div>
       </div>
 
-      <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-sm border border-white/50 overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-50/50 border-b border-gray-100">
-              <th className="p-5 font-medium text-gray-500">Nama & Email</th>
-              <th className="p-5 font-medium text-gray-500">Wilayah</th>
-              <th className="p-5 font-medium text-gray-500">Status</th>
-              <th className="p-5 font-medium text-gray-500 text-right">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pendingMitras.map((mitra, idx) => (
-              <motion.tr 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                key={mitra.id} 
-                className="border-b border-gray-50 hover:bg-white/80 transition-colors"
-              >
-                <td className="p-5">
-                  <p className="font-semibold text-gray-800">{mitra.name}</p>
-                  <p className="text-sm text-gray-500">{mitra.email}</p>
-                </td>
-                <td className="p-5 text-gray-600">{mitra.region}</td>
-                <td className="p-5">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-                    <Clock size={14} /> Menunggu
-                  </span>
-                </td>
-                <td className="p-5 flex justify-end gap-3">
-                  <button className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
-                    <XCircle size={20} />
-                  </button>
-                  <button className="p-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
-                    <CheckCircle size={20} />
-                  </button>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, idx) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.1 }}
+            className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl shadow-sm border border-white/50 hover:shadow-md transition-all"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+                <p className="text-3xl font-bold text-gray-800 mt-2">{stat.value}</p>
+              </div>
+              <div className={`p-4 rounded-2xl bg-gray-50/50 ${stat.color}`}>
+                <stat.icon size={28} />
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
