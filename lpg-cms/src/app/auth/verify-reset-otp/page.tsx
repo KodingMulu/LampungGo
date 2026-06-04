@@ -11,18 +11,23 @@ import {
   ArrowLeft
 } from 'lucide-react';
 
-// Interface untuk strict typing response error
+// Interface untuk strict typing response success & error
+interface VerifyResetResponse {
+  message: string;
+  resetToken: string;
+}
+
 interface ErrorResponse {
   message: string | string[];
   error: string;
   statusCode: number;
 }
 
-export default function VerifyOTPPage() {
+export default function VerifyResetOTPPage() {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
 
-  // State untuk 6 digit OTP (Menyesuaikan backend yang meng-generate 6 digit)
+  // State untuk 6 digit OTP
   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
@@ -30,14 +35,14 @@ export default function VerifyOTPPage() {
   const [timer, setTimer] = useState<number>(60);
   const [canResend, setCanResend] = useState<boolean>(false);
 
-  // Mengambil email dari session storage saat komponen dimuat
+  // Mengambil email dari session storage (dari halaman Forgot Password)
   useEffect(() => {
-    const storedEmail = sessionStorage.getItem('verify_email');
+    const storedEmail = sessionStorage.getItem('reset_email');
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
-      // Opsional: jika tidak ada email di session, bisa dikembalikan ke halaman register
-      // router.push('/auth/register');
+      // Opsional: jika tidak ada email, kembalikan ke halaman forgot password
+      // router.push('/auth/forgot-password');
     }
   }, [router]);
 
@@ -119,8 +124,8 @@ export default function VerifyOTPPage() {
     setTimer(60);
     setCanResend(false);
     
-    // TODO: Tambahkan endpoint integrasi Resend OTP di sini jika backend Anda memilikinya kelak
-    console.log('Mengirim ulang kode OTP...');
+    // TODO: Tambahkan endpoint integrasi Resend OTP khusus reset jika ada
+    console.log('Mengirim ulang kode OTP Reset...');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -135,26 +140,27 @@ export default function VerifyOTPPage() {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
       
-      const response = await axios.post(`${backendUrl}/api/auth/verify`, {
+      // Hit endpoint khusus verify reset OTP
+      const response = await axios.post<VerifyResetResponse>(`${backendUrl}/api/auth/verify-reset-otp`, {
         email: email,
         otpCode: otpCode
       });
 
-      alert(response.data.message || 'Verifikasi berhasil!');
+      alert(response.data.message);
       
-      // Bersihkan session storage
-      sessionStorage.removeItem('verify_email');
+      // Simpan resetToken dari backend untuk digunakan di halaman ubah password
+      sessionStorage.setItem('reset_token', response.data.resetToken);
       
-      // Redirect ke halaman login agar user bisa masuk
-      router.push('/auth/login');
+      // Redirect ke halaman pengubahan password (change-password)
+      router.push('/auth/change-password');
       
     } catch (error: unknown) {
       if (axios.isAxiosError<ErrorResponse>(error)) {
-        const errorMessage = error.response?.data?.message || 'Kode OTP tidak valid atau telah kadaluarsa.';
+        const errorMessage = error.response?.data?.message || 'Kode OTP tidak valid atau telah kedaluwarsa.';
         alert(errorMessage);
       } else {
         console.error('Verification failed', error);
-        alert('Terjadi kesalahan pada sistem saat verifikasi.');
+        alert('Terjadi kesalahan pada sistem saat memverifikasi kode.');
       }
     } finally {
       setIsLoading(false);
@@ -173,7 +179,7 @@ export default function VerifyOTPPage() {
 
       {/* Header Sederhana */}
       <header className="w-full p-6 lg:p-8 relative z-10 flex justify-between items-center max-w-7xl mx-auto">
-        <a href="/auth/register" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group">
+        <a href="/auth/forgot-password" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group">
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="text-sm font-medium">Kembali</span>
         </a>
@@ -198,9 +204,9 @@ export default function VerifyOTPPage() {
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 tracking-tight">Verifikasi Email</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 tracking-tight">Verifikasi Reset Sandi</h1>
             <p className="text-slate-500 text-sm leading-relaxed">
-              Kami telah mengirimkan 6 digit kode ke email <br />
+              Kami telah mengirimkan 6 digit kode pemulihan ke email <br />
               <span className="font-semibold text-slate-800">{email || 'Anda'}</span>
             </p>
           </div>
@@ -240,7 +246,7 @@ export default function VerifyOTPPage() {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <span>Verifikasi Sekarang</span>
+                  <span>Verifikasi Kode</span>
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
