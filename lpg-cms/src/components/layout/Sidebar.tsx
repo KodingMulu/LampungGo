@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { 
@@ -17,8 +17,8 @@ interface SidebarProps {
   onClose: () => void;
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
-  onLogoutClick?: () => void;
-  userRole?: 'SUPER_ADMIN' | 'ADMIN_WILAYAH'; // Tambahkan role untuk filter menu
+  onLogoutClick: () => void;
+  userRole?: 'SUPER_ADMIN' | 'ADMIN_WILAYAH'; // Prop untuk filter hak akses
 }
 
 export default function Sidebar({ 
@@ -27,10 +27,10 @@ export default function Sidebar({
   activeMenu, 
   setActiveMenu, 
   onLogoutClick,
-  userRole = 'SUPER_ADMIN' // Default untuk keperluan UI testing
+  userRole = 'SUPER_ADMIN' // Default ke Super Admin (sementara)
 }: SidebarProps) {
   
-  // Daftar menu disesuaikan dengan kebutuhan CMS
+  // Konfigurasi Menu & Hak Akses
   const allMenuItems = [
     { id: 'Overview', icon: <LayoutDashboard className="w-5 h-5" />, label: 'Ikhtisar', roles: ['SUPER_ADMIN', 'ADMIN_WILAYAH'] },
     { id: 'Regions', icon: <Map className="w-5 h-5" />, label: 'Manajemen Wilayah', roles: ['SUPER_ADMIN'] }, // Khusus Super Admin
@@ -39,7 +39,7 @@ export default function Sidebar({
     { id: 'Services', icon: <Store className="w-5 h-5" />, label: 'Layanan Mitra', roles: ['SUPER_ADMIN', 'ADMIN_WILAYAH'] },
   ];
 
-  // Filter menu berdasarkan role
+  // Filter menu berdasarkan role yang login
   const menuItems = allMenuItems.filter(item => item.roles.includes(userRole));
 
   return (
@@ -58,9 +58,10 @@ export default function Sidebar({
             </div>
             <div>
               <span className="block text-lg font-bold tracking-tight text-gray-900 leading-none">LampungGo</span>
-              <span className="block text-xs font-medium text-gray-500 mt-1 uppercase tracking-wider">Workspace</span>
+              <span className="block text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest">CMS Admin</span>
             </div>
           </div>
+          {/* Tombol Tutup Sidebar (Hanya terlihat di Mobile) */}
           <button 
             className="lg:hidden p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100/50 transition-colors"
             onClick={onClose}
@@ -80,7 +81,7 @@ export default function Sidebar({
                 key={item.id}
                 onClick={() => {
                   setActiveMenu(item.id);
-                  onClose(); 
+                  onClose(); // Tutup sidebar setelah klik di tampilan mobile
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 font-medium text-sm ${
                   isActive 
