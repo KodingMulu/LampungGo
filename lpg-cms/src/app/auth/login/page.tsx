@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { 
   Mail, 
   Lock, 
@@ -12,6 +15,8 @@ import {
 } from 'lucide-react';
 
 export default function LoginPage() {
+  const router = useRouter();
+  
   // State dengan strict typing bawaan React
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,13 +28,30 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulasi pemanggilan API (Ganti dengan logika autentikasi NextAuth/API Anda)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log('Login attempt with:', { email, password });
-      // Redirect logika diletakkan di sini setelah sukses
-    } catch (error) {
+      // Menggunakan environment variable untuk URL Backend
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
+      
+      const response = await axios.post(`${backendUrl}/api/auth/login`, {
+        email,
+        password
+      });
+
+      // Backend me-return access_token dan object user
+      const { access_token, user } = response.data;
+
+      // Menyimpan token dan informasi user ke dalam localStorage
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // Redirect ke halaman dashboard saat sukses
+      router.push('/dashboard');
+      
+    } catch (error: any) {
       console.error('Login failed', error);
+      // Anda bisa menggantinya dengan toast/notification bawaan Anda jika ada
+      const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat login';
+      alert(errorMessage); 
     } finally {
       setIsLoading(false);
     }
