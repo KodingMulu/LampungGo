@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useRef, useEffect, KeyboardEvent, ClipboardEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -9,17 +11,40 @@ import {
   ArrowLeft
 } from 'lucide-react';
 
+// Interface untuk strict typing response error
+interface ErrorResponse {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
+
 export default function VerifyOTPPage() {
-  // State untuk 4 digit OTP
-  const [otp, setOtp] = useState<string[]>(['', '', '', '']);
+  const router = useRouter();
+  const [email, setEmail] = useState<string>('');
+
+  // State untuk 6 digit OTP (Menyesuaikan backend yang meng-generate 6 digit)
+  const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // State untuk timer kirim ulang (resend)
   const [timer, setTimer] = useState<number>(60);
   const [canResend, setCanResend] = useState<boolean>(false);
 
-  // Refs untuk setiap input box agar bisa auto-focus
+  // Mengambil email dari session storage saat komponen dimuat
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem('verify_email');
+    if (storedEmail) {
+      setEmail(storedEmail);
+    } else {
+      // Opsional: jika tidak ada email di session, bisa dikembalikan ke halaman register
+      // router.push('/auth/register');
+    }
+  }, [router]);
+
+  // Refs untuk setiap input box agar bisa auto-focus (6 kotak)
   const inputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -49,8 +74,8 @@ export default function VerifyOTPPage() {
     newOtp[index] = value.substring(value.length - 1);
     setOtp(newOtp);
 
-    // Auto-focus ke kotak berikutnya jika ada isinya
-    if (value && index < 3) {
+    // Auto-focus ke kotak berikutnya jika ada isinya (batas index 5)
+    if (value && index < 5) {
       inputRefs[index + 1].current?.focus();
     }
   };
@@ -62,26 +87,27 @@ export default function VerifyOTPPage() {
       inputRefs[index - 1].current?.focus();
     } else if (e.key === 'ArrowLeft' && index > 0) {
       inputRefs[index - 1].current?.focus();
-    } else if (e.key === 'ArrowRight' && index < 3) {
+    } else if (e.key === 'ArrowRight' && index < 5) {
       inputRefs[index + 1].current?.focus();
     }
   };
 
-  // Handle paste kode (misal user copy "1234")
+  // Handle paste kode (misal user copy "123456")
   const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text/plain').slice(0, 4);
+    // Ambil maksimal 6 karakter dari clipboard
+    const pastedData = e.clipboardData.getData('text/plain').slice(0, 6);
     
     // Pastikan yang di-paste hanya angka
     if (/^\d+$/.test(pastedData)) {
       const newOtp = [...otp];
       for (let i = 0; i < pastedData.length; i++) {
-        if (i < 4) newOtp[i] = pastedData[i];
+        if (i < 6) newOtp[i] = pastedData[i];
       }
       setOtp(newOtp);
       
       // Focus ke kotak terakhir yang diisi
-      const focusIndex = Math.min(pastedData.length, 3);
+      const focusIndex = Math.min(pastedData.length, 5);
       inputRefs[focusIndex].current?.focus();
     }
   };
@@ -93,7 +119,7 @@ export default function VerifyOTPPage() {
     setTimer(60);
     setCanResend(false);
     
-    // Simulasi API Resend
+    // TODO: Tambahkan endpoint integrasi Resend OTP di sini jika backend Anda memilikinya kelak
     console.log('Mengirim ulang kode OTP...');
   };
 
@@ -101,24 +127,41 @@ export default function VerifyOTPPage() {
     e.preventDefault();
     const otpCode = otp.join('');
     
-    // Validasi harus 4 digit
-    if (otpCode.length < 4) return;
+    // Validasi harus 6 digit sesuai backend
+    if (otpCode.length < 6 || !email) return;
     
     setIsLoading(true);
     
     try {
-      // Simulasi pemanggilan API Verifikasi
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log('Verifying OTP code:', otpCode);
-      // Redirect ke dashboard diletakkan di sini
-    } catch (error) {
-      console.error('Verification failed', error);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
+      
+      const response = await axios.post(`${backendUrl}/api/auth/verify`, {
+        email: email,
+        otpCode: otpCode
+      });
+
+      alert(response.data.message || 'Verifikasi berhasil!');
+      
+      // Bersihkan session storage
+      sessionStorage.removeItem('verify_email');
+      
+      // Redirect ke halaman login agar user bisa masuk
+      router.push('/auth/login');
+      
+    } catch (error: unknown) {
+      if (axios.isAxiosError<ErrorResponse>(error)) {
+        const errorMessage = error.response?.data?.message || 'Kode OTP tidak valid atau telah kadaluarsa.';
+        alert(errorMessage);
+      } else {
+        console.error('Verification failed', error);
+        alert('Terjadi kesalahan pada sistem saat verifikasi.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Cek apakah form siap di-submit
+  // Cek apakah form siap di-submit (6 digit terisi semua)
   const isFormValid = otp.every(digit => digit !== '');
 
   return (
@@ -130,7 +173,7 @@ export default function VerifyOTPPage() {
 
       {/* Header Sederhana */}
       <header className="w-full p-6 lg:p-8 relative z-10 flex justify-between items-center max-w-7xl mx-auto">
-        <a href="/register" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group">
+        <a href="/auth/register" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group">
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="text-sm font-medium">Kembali</span>
         </a>
@@ -157,15 +200,15 @@ export default function VerifyOTPPage() {
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 tracking-tight">Verifikasi Email</h1>
             <p className="text-slate-500 text-sm leading-relaxed">
-              Kami telah mengirimkan 4 digit kode ke email <br />
-              <span className="font-semibold text-slate-800">wisatawan@email.com</span>
+              Kami telah mengirimkan 6 digit kode ke email <br />
+              <span className="font-semibold text-slate-800">{email || 'Anda'}</span>
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8" noValidate>
             
-            {/* Input 4 Digit OTP */}
-            <div className="flex justify-center gap-3 sm:gap-4" onPaste={handlePaste}>
+            {/* Input 6 Digit OTP */}
+            <div className="flex justify-center gap-2 sm:gap-3" onPaste={handlePaste}>
               {otp.map((digit, index) => (
                 <input
                   key={index}
@@ -177,7 +220,7 @@ export default function VerifyOTPPage() {
                   value={digit}
                   onChange={(e) => handleChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
-                  className={`w-14 h-16 sm:w-16 sm:h-18 text-center text-2xl sm:text-3xl font-bold rounded-2xl border bg-slate-50 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 ${
+                  className={`w-12 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-bold rounded-2xl border bg-slate-50 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 ${
                     digit 
                       ? 'border-emerald-500 bg-white text-emerald-700 shadow-sm shadow-emerald-100' 
                       : 'border-slate-200 text-slate-900 focus:border-emerald-400 focus:bg-white'
