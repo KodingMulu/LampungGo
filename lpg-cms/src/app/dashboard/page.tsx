@@ -2,105 +2,90 @@
 
 import React, { useState } from 'react';
 
-// Import komponen UI layout
+// Import Komponen Layout
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
-import BottomNav from '@/components/layout/BottomNav';
 import ModalKeluar from '@/components/layout/ModalKeluar';
 
-// Import komponen konten Dashboard
-import Ikhtisar from '@/components/dashboard/Ikhtisar';
-import Eksplorasi from '@/components/dashboard/Eksplorasi';
-import TiketBooking from '@/components/dashboard/TiketBooking';
-import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan';
-import ItineraryPlanner from '@/components/dashboard/ItineraryPlanner';
-import SplitBill from '@/components/dashboard/SplitBill';
-
-// Data User
-const currentUser = {
-  name: "Raden Intan",
-  role: "Wisatawan",
-  avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
-};
+// Import Komponen Konten (Pastikan Anda sudah membuat/mengubah nama file ini di folder dashboard)
+import Overview from '@/components/dashboard/Overview';
+import RegionManagement from '@/components/dashboard/RegionManagement';
+import MitraApprovals from '@/components/dashboard/MitraApprovals';
+import Destinations from '@/components/dashboard/Destinations';
+import Services from '@/components/dashboard/Services';
+import Settings from '@/components/dashboard/Settings';
 
 export default function DashboardPage() {
+  // State Management
+  const [activeMenu, setActiveMenu] = useState('Overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState('Overview'); 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  
+  // Simulasi Role (Nantinya nilai ini diambil dari JWT Token / Session Auth)
+  // Ubah ke 'ADMIN_WILAYAH' untuk melihat bagaimana menu 'Manajemen Wilayah' otomatis hilang
+  const userRole = 'SUPER_ADMIN'; 
 
-  const getPageTitle = () => {
+  // Fungsi untuk merender komponen secara dinamis berdasarkan menu yang diklik
+  const renderContent = () => {
     switch (activeMenu) {
-      case 'Overview': return 'Ikhtisar';
-      case 'Destinations': return 'Eksplorasi';
-      case 'Tickets': return 'Tiket & Booking';
-      case 'Itinerary': return 'Rencana Perjalanan';
-      case 'SplitBill': return 'Kalkulator Patungan';
-      case 'Favorites': return 'Destinasi Favorit';
-      case 'Settings': return 'Pengaturan Akun';
-      default: return 'Dashboard';
+      case 'Overview':
+        return <Overview />;
+      case 'Regions':
+        return <RegionManagement />;
+      case 'MitraApprovals':
+        return <MitraApprovals />;
+      case 'Destinations':
+        return <Destinations />;
+      case 'Services':
+        return <Services />;
+      case 'Settings':
+        return <Settings />;
+      default:
+        return <Overview />;
     }
   };
 
-  const handleConfirmLogout = () => {
-    alert("Berhasil Keluar!");
-    setIsLogoutModalOpen(false);
-  };
-
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex overflow-hidden relative">
+    <div className="flex h-screen overflow-hidden bg-slate-50/50">
       
-      {/* BUNGKUS SIDEBAR: 
-        hidden -> sembunyikan secara default (di mobile)
-        lg:block -> tampilkan di layar besar (desktop)
-      */}
-      <div className="hidden lg:block">
-        <Sidebar 
-          isOpen={isSidebarOpen} 
-          onClose={() => setIsSidebarOpen(false)} 
-          activeMenu={activeMenu}
-          setActiveMenu={setActiveMenu}
-          onLogoutClick={() => setIsLogoutModalOpen(true)} 
-        />
-      </div>
+      {/* 1. Sidebar Component */}
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        activeMenu={activeMenu} 
+        setActiveMenu={setActiveMenu} 
+        onLogoutClick={() => setIsLogoutModalOpen(true)}
+        userRole={userRole}
+      />
 
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      {/* 2. Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        
+        {/* Header Component */}
+        {/* Pastikan Header Anda memiliki props onMenuClick untuk membuka sidebar di mobile */}
         <Header 
-          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          title={getPageTitle()}
-          user={currentUser}
-          onSettingsClick={() => setActiveMenu('Settings')}
-          onLogoutClick={() => setIsLogoutModalOpen(true)}  
+          onMenuClick={() => setIsSidebarOpen(true)} 
+          activeMenu={activeMenu} 
         />
 
-        {/* Konten Utama */}
-        <main className="flex-1 overflow-y-auto scroll-smooth pb-24 lg:pb-0">
-          {activeMenu === 'Overview' && <Ikhtisar />}
-          {activeMenu === 'Destinations' && <Eksplorasi />}
-          {activeMenu === 'Tickets' && <TiketBooking />}
-          {activeMenu === 'Itinerary' && <ItineraryPlanner />}
-          {activeMenu === 'SplitBill' && <SplitBill />}
-          {activeMenu === 'Favorites' && <Favorit />}
-          {activeMenu === 'Settings' && <Pengaturan />}
+        {/* Dynamic Content Rendering */}
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 lg:p-8 scroll-smooth">
+          {/* Animasi transisi ringan saat render */}
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {renderContent()}
+          </div>
         </main>
       </div>
 
-      {/* BUNGKUS BOTTOM NAV: 
-        block -> tampilkan secara default (di mobile)
-        lg:hidden -> sembunyikan di layar besar (desktop)
-      */}
-      <div className="block lg:hidden">
-        <BottomNav 
-          activeMenu={activeMenu} 
-          setActiveMenu={setActiveMenu} 
+      {/* 3. Modal Logout */}
+      {/* Pastikan komponen ModalKeluar menerima isOpen dan onClose */}
+      {isLogoutModalOpen && (
+        <ModalKeluar 
+          isOpen={isLogoutModalOpen} 
+          onClose={() => setIsLogoutModalOpen(false)} 
         />
-      </div>
-
-      <ModalKeluar 
-        isOpen={isLogoutModalOpen}
-        onClose={() => setIsLogoutModalOpen(false)}
-        onConfirm={handleConfirmLogout}
-      />
+      )}
+      
     </div>
   );
 }
