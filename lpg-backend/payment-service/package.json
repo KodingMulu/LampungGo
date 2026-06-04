@@ -21,11 +21,13 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.40",
     "chokidar": "^5.0.0",
+    "midtrans-client": "^1.4.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
