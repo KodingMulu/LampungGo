@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import axios, { AxiosError } from 'axios';
 import { 
   Mail, 
   Lock, 
@@ -14,7 +16,21 @@ import {
   Tent
 } from 'lucide-react';
 
+// Interface untuk strict typing response backend
+interface RegisterResponse {
+  message: string;
+  email: string;
+}
+
+interface ErrorResponse {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
+
 export default function RegisterPage() {
+  const router = useRouter();
+
   // State form
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -47,12 +63,35 @@ export default function RegisterPage() {
     setIsLoading(true);
     
     try {
-      // Simulasi pemanggilan API Registrasi
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log('Register attempt with:', { name, email, password });
-      // Redirect ke halaman login/beranda diletakkan di sini
-    } catch (error) {
-      console.error('Registration failed', error);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
+      
+      const response = await axios.post<RegisterResponse>(`${backendUrl}/api/auth/register`, {
+        name,
+        email,
+        password
+      });
+
+      // Menampilkan pesan sukses dari backend (tentang OTP yang dikirim)
+      alert(response.data.message);
+      
+      // Redirect ke halaman verifikasi OTP setelah sukses
+      // Menyimpan email sementara di localStorage/sessionStorage bisa berguna untuk auto-fill di halaman verify
+      sessionStorage.setItem('verify_email', response.data.email);
+      router.push('/auth/verify'); 
+      
+    } catch (error: unknown) {
+      // Penanganan error tanpa menggunakan tipe 'any'
+      if (axios.isAxiosError<ErrorResponse>(error)) {
+        const errorData = error.response?.data;
+        const errorMessage = Array.isArray(errorData?.message) 
+          ? errorData.message.join(', ') 
+          : errorData?.message || 'Terjadi kesalahan saat pendaftaran.';
+          
+        alert(errorMessage);
+      } else {
+        console.error('Registration failed', error);
+        alert('Terjadi kesalahan pada sistem.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -290,7 +329,7 @@ export default function RegisterPage() {
           {/* Link ke Login */}
           <p className="text-center text-slate-600 text-sm mt-8">
             Sudah memiliki akun?{' '}
-            <a href="/login" className="font-semibold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">
+            <a href="/auth/login" className="font-semibold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">
               Masuk di sini
             </a>
           </p>
