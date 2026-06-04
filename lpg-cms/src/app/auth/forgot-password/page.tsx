@@ -1,5 +1,7 @@
 "use client"
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import { 
   Mail, 
   ArrowRight, 
@@ -10,7 +12,19 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
+// Interface untuk strict typing
+interface ForgotPasswordResponse {
+  message: string;
+}
+
+interface ErrorResponse {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
+
 export default function ForgotPasswordPage() {
+  const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSent, setIsSent] = useState<boolean>(false);
@@ -25,19 +39,40 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
     
     try {
-      // Simulasi pemanggilan API Kirim Link/OTP Reset Password
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log('Reset link sent to:', email);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
+      
+      const response = await axios.post<ForgotPasswordResponse>(`${backendUrl}/api/auth/forgot-password`, {
+        email: email
+      });
+
+      console.log('Reset link/OTP sent:', response.data.message);
+      
+      // Simpan email di session storage untuk digunakan di halaman verifikasi/ubah sandi
+      sessionStorage.setItem('reset_email', email);
+      
+      // Tampilkan state sukses (UI bawaan Anda)
       setIsSent(true);
       
-      // Biasanya setelah ini pengguna diarahkan ke halaman OTP atau dicek emailnya
-      // router.push('/verify'); // Jika menggunakan OTP
-      
-    } catch (error) {
-      console.error('Failed to send reset link', error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError<ErrorResponse>(error)) {
+        // Backend NestJS me-return BadRequestException jika email tidak valid (meski pesannya generik)
+        const errorMessage = Array.isArray(error.response?.data?.message)
+          ? error.response?.data?.message.join(', ')
+          : error.response?.data?.message || 'Terjadi kesalahan saat meminta reset kata sandi.';
+        alert(errorMessage);
+      } else {
+        console.error('Failed to send reset link', error);
+        alert('Terjadi kesalahan pada sistem.');
+      }
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleNavigateToReset = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // Mengarahkan ke halaman ubah password (sesuai struktur folder lpg-cms Anda)
+    router.push('/auth/verify-reset-otp');
   };
 
   return (
@@ -49,10 +84,13 @@ export default function ForgotPasswordPage() {
 
       {/* Header Sederhana */}
       <header className="w-full p-6 lg:p-8 relative z-10 flex justify-between items-center max-w-7xl mx-auto">
-        <a href="/login" className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group">
+        <button 
+          onClick={() => router.push('/auth/login')} 
+          className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors group bg-transparent border-none cursor-pointer"
+        >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="text-sm font-medium">Kembali ke Login</span>
-        </a>
+        </button>
         
         <div className="flex items-center gap-2 text-emerald-700">
           <div className="p-1.5 bg-emerald-100 rounded-lg">
@@ -86,15 +124,15 @@ export default function ForgotPasswordPage() {
               </div>
 
               <div className="space-y-3">
-                <a 
-                  href="/verify"
+                <button 
+                  onClick={handleNavigateToReset}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg shadow-emerald-600/20"
                 >
                   Masukkan Kode OTP
-                </a>
+                </button>
                 <button 
                   onClick={() => setIsSent(false)}
-                  className="w-full bg-white hover:bg-slate-50 text-slate-600 font-medium py-3 px-4 rounded-xl transition-all duration-200"
+                  className="w-full bg-white hover:bg-slate-50 text-slate-600 font-medium py-3 px-4 rounded-xl transition-all duration-200 border border-slate-200"
                 >
                   Gunakan email lain
                 </button>
@@ -158,17 +196,13 @@ export default function ForgotPasswordPage() {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <span>Kirim Instruksi</span>
+                      <span>Kirim Kode Reset</span>
                       <ArrowRight className="w-5 h-5" />
                     </>
                   )}
                 </button>
               </form>
-
-              {/* Bantuan Alternatif */}
-              <div className="mt-8 text-center text-sm text-slate-500">
-                Mengalami masalah? <a href="#" className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline">Hubungi Bantuan</a>
-              </div>
+          
             </>
           )}
 
