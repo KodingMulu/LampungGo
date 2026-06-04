@@ -43,10 +43,13 @@ export default function Header({ onMenuClick, title, user, onSettingsClick, onLo
     <header className="h-20 bg-white/70 backdrop-blur-xl border-b border-slate-200/60 shadow-[0_4px_30px_rgba(0,0,0,0.03)] flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30 flex-shrink-0 transition-all duration-300">
       
       <div className="flex items-center gap-4">
-        <button className="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors" onClick={onMenuClick}>
+        {/* PERBAIKAN DI SINI: Ubah lg:hidden menjadi hidden lg:block */}
+        <button className="hidden lg:block p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors" onClick={onMenuClick}>
           <Menu className="w-6 h-6" />
         </button>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 hidden sm:block tracking-tight">{title}</h1>
+        
+        {/* CATATAN: Saya menghapus 'hidden sm:block' agar judul halaman tetap muncul di HP saat ikon menu hilang */}
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">{title}</h1>
       </div>
 
       <div className="flex items-center gap-4 sm:gap-6">

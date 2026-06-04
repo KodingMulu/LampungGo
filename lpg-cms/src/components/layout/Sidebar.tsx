@@ -98,16 +98,6 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
           </button>
         </nav>
 
-        {/* Footer Sidebar */}
-        <div className="p-4 border-t border-slate-100 flex-shrink-0">
-          <button 
-            onClick={onLogoutClick} 
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium cursor-pointer"
-          >
-            <LogOut className="w-5 h-5" />
-            Keluar
-          </button>
-        </div>
       </aside>
 
       {/* Overlay Mobile */}

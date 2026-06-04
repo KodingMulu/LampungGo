@@ -13,9 +13,9 @@ import Ikhtisar from '@/components/dashboard/Ikhtisar';
 import Eksplorasi from '@/components/dashboard/Eksplorasi';
 import TiketBooking from '@/components/dashboard/TiketBooking';
 import Favorit from '@/components/dashboard/Favorit';
-import Pengaturan from '@/components/dashboard/pengaturan'; // Pastikan nama file Pengaturan.tsx
+import Pengaturan from '@/components/dashboard/pengaturan';
 import ItineraryPlanner from '@/components/dashboard/ItineraryPlanner';
-import SplitBill from '@/components/dashboard/SplitBill'; // Import fitur baru
+import SplitBill from '@/components/dashboard/SplitBill';
 
 // Data User
 const currentUser = {
@@ -35,7 +35,7 @@ export default function DashboardPage() {
       case 'Destinations': return 'Eksplorasi';
       case 'Tickets': return 'Tiket & Booking';
       case 'Itinerary': return 'Rencana Perjalanan';
-      case 'SplitBill': return 'Kalkulator Patungan'; // Judul untuk menu Split Bill
+      case 'SplitBill': return 'Kalkulator Patungan';
       case 'Favorites': return 'Destinasi Favorit';
       case 'Settings': return 'Pengaturan Akun';
       default: return 'Dashboard';
@@ -50,17 +50,23 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex overflow-hidden relative">
       
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-        onLogoutClick={() => setIsLogoutModalOpen(true)} 
-      />
+      {/* BUNGKUS SIDEBAR: 
+        hidden -> sembunyikan secara default (di mobile)
+        lg:block -> tampilkan di layar besar (desktop)
+      */}
+      <div className="hidden lg:block">
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          onClose={() => setIsSidebarOpen(false)} 
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          onLogoutClick={() => setIsLogoutModalOpen(true)} 
+        />
+      </div>
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Header 
-          onMenuClick={() => setIsSidebarOpen(true)}
+          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
           title={getPageTitle()}
           user={currentUser}
           onSettingsClick={() => setActiveMenu('Settings')}
@@ -73,16 +79,22 @@ export default function DashboardPage() {
           {activeMenu === 'Destinations' && <Eksplorasi />}
           {activeMenu === 'Tickets' && <TiketBooking />}
           {activeMenu === 'Itinerary' && <ItineraryPlanner />}
-          {activeMenu === 'SplitBill' && <SplitBill />} {/* Rendering komponen SplitBill */}
+          {activeMenu === 'SplitBill' && <SplitBill />}
           {activeMenu === 'Favorites' && <Favorit />}
           {activeMenu === 'Settings' && <Pengaturan />}
         </main>
       </div>
 
-      <BottomNav 
-        activeMenu={activeMenu} 
-        setActiveMenu={setActiveMenu} 
-      />
+      {/* BUNGKUS BOTTOM NAV: 
+        block -> tampilkan secara default (di mobile)
+        lg:hidden -> sembunyikan di layar besar (desktop)
+      */}
+      <div className="block lg:hidden">
+        <BottomNav 
+          activeMenu={activeMenu} 
+          setActiveMenu={setActiveMenu} 
+        />
+      </div>
 
       <ModalKeluar 
         isOpen={isLogoutModalOpen}
