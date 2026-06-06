@@ -25,6 +25,7 @@ const categories = [
 const recommendations = [
 {
       id: 1,
+      title: 'Pulau\nPahawang',
 },
 ];
 
