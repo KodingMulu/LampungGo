@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { 
-  Compass, 
+  LayoutDashboard, 
   Map, 
-  Ticket, 
-  Heart, 
+  UserCheck, 
+  MapPin, 
+  Store,
   Settings, 
   LogOut, 
-  X, 
-  Calendar,
-  Receipt // Import ikon untuk Split Bill
+  X
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -18,36 +17,53 @@ interface SidebarProps {
   onClose: () => void;
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
-  onLogoutClick?: () => void;
+  onLogoutClick: () => void;
+  userRole?: 'SUPER_ADMIN' | 'ADMIN_WILAYAH'; // Prop untuk filter hak akses
 }
 
-export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, onLogoutClick }: SidebarProps) {
-  const menuItems = [
-    { id: 'Overview', icon: <Compass className="w-5 h-5" />, label: 'Ikhtisar' },
-    { id: 'Destinations', icon: <Map className="w-5 h-5" />, label: 'Eksplorasi' },
-    { id: 'Tickets', icon: <Ticket className="w-5 h-5" />, label: 'Tiket & Booking' },
-    { id: 'Itinerary', icon: <Calendar className="w-5 h-5" />, label: 'Rencana Perjalanan' },
-    { id: 'SplitBill', icon: <Receipt className="w-5 h-5" />, label: 'Patungan' }, // Menu Baru
-    { id: 'Favorites', icon: <Heart className="w-5 h-5" />, label: 'Favorit' },
+export default function Sidebar({ 
+  isOpen, 
+  onClose, 
+  activeMenu, 
+  setActiveMenu, 
+  onLogoutClick,
+  userRole = 'SUPER_ADMIN' // Default ke Super Admin (sementara)
+}: SidebarProps) {
+  
+  // Konfigurasi Menu & Hak Akses
+  const allMenuItems = [
+    { id: 'Overview', icon: <LayoutDashboard className="w-5 h-5" />, label: 'Ikhtisar', roles: ['SUPER_ADMIN', 'ADMIN_WILAYAH'] },
+    { id: 'Regions', icon: <Map className="w-5 h-5" />, label: 'Manajemen Wilayah', roles: ['SUPER_ADMIN'] }, // Khusus Super Admin
+    { id: 'MitraApprovals', icon: <UserCheck className="w-5 h-5" />, label: 'Approval Mitra', roles: ['SUPER_ADMIN', 'ADMIN_WILAYAH'] },
+    { id: 'Destinations', icon: <MapPin className="w-5 h-5" />, label: 'Destinasi', roles: ['SUPER_ADMIN', 'ADMIN_WILAYAH'] },
+    { id: 'Services', icon: <Store className="w-5 h-5" />, label: 'Layanan Mitra', roles: ['SUPER_ADMIN', 'ADMIN_WILAYAH'] },
   ];
+
+  // Filter menu berdasarkan role yang login
+  const menuItems = allMenuItems.filter(item => item.roles.includes(userRole));
 
   return (
     <>
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out flex flex-col
+        fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out flex flex-col
+        bg-white/80 backdrop-blur-2xl border-r border-white/50 shadow-[4px_0_24px_rgba(0,0,0,0.02)]
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:relative lg:translate-x-0
       `}>
-        {/* Logo */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100 flex-shrink-0">
-          <div className="flex items-center gap-2 text-emerald-700">
-            <div className="p-2 bg-emerald-100 rounded-xl">
-              <Compass className="w-6 h-6 text-emerald-600" />
+        {/* Logo Area */}
+        <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100/50 flex-shrink-0">
+          <div className="flex items-center gap-3 text-gray-800">
+            <div className="p-2.5 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg shadow-gray-900/20">
+              <MapPin className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-wider text-slate-800">JELAJAH</span>
+            <div>
+              <span className="block text-lg font-bold tracking-tight text-gray-900 leading-none">LampungGo</span>
+              <span className="block text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest">CMS Admin</span>
+            </div>
           </div>
+          {/* Tombol Tutup Sidebar (Hanya terlihat di Mobile) */}
           <button 
-            className="lg:hidden p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+            className="lg:hidden p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100/50 transition-colors"
             onClick={onClose}
           >
             <X className="w-5 h-5" />
@@ -55,8 +71,9 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
         </div>
 
         {/* Navigation Utama */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-          <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-2">Menu Utama</p>
+        <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+          <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 mt-2">Menu Utama</p>
+          
           {menuItems.map((item) => {
             const isActive = activeMenu === item.id;
             return (
@@ -64,15 +81,15 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
                 key={item.id}
                 onClick={() => {
                   setActiveMenu(item.id);
-                  onClose(); 
+                  onClose(); // Tutup sidebar setelah klik di tampilan mobile
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
+                className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 font-medium text-sm ${
                   isActive 
-                    ? 'bg-emerald-50 text-emerald-700' 
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-gray-900 text-white shadow-md shadow-gray-900/10 scale-[0.98]' 
+                    : 'text-gray-500 hover:bg-gray-100/80 hover:text-gray-900'
                 }`}
               >
-                <div className={isActive ? 'text-emerald-600' : 'text-slate-400'}>
+                <div className={isActive ? 'text-gray-300' : 'text-gray-400'}>
                   {item.icon}
                 </div>
                 {item.label}
@@ -80,31 +97,33 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
             );
           })}
 
-          <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 mt-8">Lainnya</p>
-          
-          <button 
-            onClick={() => {
-              setActiveMenu('Settings');
-              onClose();
-            }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium ${
-              activeMenu === 'Settings' 
-                ? 'bg-emerald-50 text-emerald-700' 
-                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
-            }`}
-          >
-            <Settings className={`w-5 h-5 ${activeMenu === 'Settings' ? 'text-emerald-600' : 'text-slate-400'}`} />
-            Pengaturan Akun
-          </button>
+          <div className="pt-6 mt-6 border-t border-gray-100/50">
+            <p className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Pengaturan</p>
+            
+            <button 
+              onClick={() => {
+                setActiveMenu('Settings');
+                onClose();
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 font-medium text-sm ${
+                activeMenu === 'Settings' 
+                  ? 'bg-gray-900 text-white shadow-md shadow-gray-900/10 scale-[0.98]' 
+                  : 'text-gray-500 hover:bg-gray-100/80 hover:text-gray-900'
+              }`}
+            >
+              <Settings className={`w-5 h-5 ${activeMenu === 'Settings' ? 'text-gray-300' : 'text-gray-400'}`} />
+              Sistem Akun
+            </button>
+          </div>
         </nav>
 
-        {/* Footer Sidebar */}
-        <div className="p-4 border-t border-slate-100 flex-shrink-0">
+        {/* Tombol Logout di Bawah */}
+        <div className="p-4 border-t border-gray-100/50">
           <button 
-            onClick={onLogoutClick} 
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-medium cursor-pointer"
+            onClick={onLogoutClick}
+            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 font-medium text-sm text-red-600 hover:bg-red-50 hover:text-red-700 group"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-600 transition-colors" />
             Keluar
           </button>
         </div>
@@ -113,7 +132,7 @@ export default function Sidebar({ isOpen, onClose, activeMenu, setActiveMenu, on
       {/* Overlay Mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-gray-900/20 z-40 lg:hidden backdrop-blur-sm transition-opacity"
           onClick={onClose}
         />
       )}
