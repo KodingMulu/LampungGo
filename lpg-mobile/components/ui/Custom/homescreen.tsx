@@ -14,3 +14,5 @@ import {
 import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
+
+const categories = [];
