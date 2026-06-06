@@ -26,6 +26,7 @@ const recommendations = [
 {
       id: 1,
       title: 'Pulau\nPahawang',
+      rating: '4.8',
 },
 ];
 
