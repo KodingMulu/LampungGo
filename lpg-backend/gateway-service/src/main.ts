@@ -12,13 +12,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const proxyOptions = (
-    target: string,
-    pathRewrite: Record<string, string>,
-  ): Options => ({
+  const proxyOptions = (pathFilter: string, target: string): Options => ({
+    pathFilter,
     target,
     changeOrigin: true,
-    pathRewrite,
     on: {
       proxyRes: (proxyRes: IncomingMessage) => {
         if (proxyRes.headers) {
@@ -48,34 +45,19 @@ async function bootstrap() {
   });
 
   app.use(
-    '/api/auth',
+    createProxyMiddleware(proxyOptions('/api/auth', 'http://127.0.0.1:8001')),
+  );
+  app.use(
+    createProxyMiddleware(proxyOptions('/api/users', 'http://127.0.0.1:8002')),
+  );
+  app.use(
     createProxyMiddleware(
-      proxyOptions('http://127.0.0.1:8001', { '^/api/auth': '/auth' }),
+      proxyOptions('/api/destinations', 'http://127.0.0.1:8003'),
     ),
   );
-
   app.use(
-    '/api/users',
     createProxyMiddleware(
-      proxyOptions('http://127.0.0.1:8002', { '^/api/users': '/users' }),
-    ),
-  );
-
-  app.use(
-    '/api/destinations',
-    createProxyMiddleware(
-      proxyOptions('http://127.0.0.1:8003', {
-        '^/api/destinations': '/destinations',
-      }),
-    ),
-  );
-
-  app.use(
-    '/api/mitra-services',
-    createProxyMiddleware(
-      proxyOptions('http://127.0.0.1:8003', {
-        '^/api/mitra-services': '/mitra-services',
-      }),
+      proxyOptions('/api/mitra-services', 'http://127.0.0.1:8003'),
     ),
   );
 
