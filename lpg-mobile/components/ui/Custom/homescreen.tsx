@@ -22,4 +22,6 @@ const categories = [
   { id: 4, name: 'Penginapan', icon: 'office-building', color: '#F3F4F6', iconColor: '#4B5563', type: 'material' },
 ];
 
+const recommendations = []
+
 }
