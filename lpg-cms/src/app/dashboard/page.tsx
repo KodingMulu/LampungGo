@@ -1,13 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
-
-// Import Komponen Layout
+import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import ModalKeluar from '@/components/layout/ModalKeluar';
-
-// Import Komponen Konten (Pastikan Anda sudah membuat/mengubah nama file ini di folder dashboard)
 import Overview from '@/components/dashboard/Overview';
 import RegionManagement from '@/components/dashboard/RegionManagement';
 import MitraApprovals from '@/components/dashboard/MitraApprovals';
@@ -15,17 +11,35 @@ import Destinations from '@/components/dashboard/Destinations';
 import Services from '@/components/dashboard/Services';
 import Settings from '@/components/dashboard/Settings';
 
+type UserRole = "ADMIN_WILAYAH" | "SUPER_ADMIN" | undefined;
+
 export default function DashboardPage() {
-  // State Management
   const [activeMenu, setActiveMenu] = useState('Overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  
-  // Simulasi Role (Nantinya nilai ini diambil dari JWT Token / Session Auth)
-  // Ubah ke 'ADMIN_WILAYAH' untuk melihat bagaimana menu 'Manajemen Wilayah' otomatis hilang
-  const userRole = 'SUPER_ADMIN'; 
+  const [userRole, setUserRole] = useState<UserRole>('ADMIN_WILAYAH');
+  const [isClient, setIsClient] = useState(false);
 
-  // Fungsi untuk merender komponen secara dinamis berdasarkan menu yang diklik
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const parsedUser = JSON.parse(userData);
+          if (parsedUser?.role === 'SUPER_ADMIN' || parsedUser?.role === 'ADMIN_WILAYAH') {
+            setUserRole(parsedUser.role);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsClient(true);
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const renderContent = () => {
     switch (activeMenu) {
       case 'Overview':
@@ -45,10 +59,10 @@ export default function DashboardPage() {
     }
   };
 
+  if (!isClient) return null;
+
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50/50">
-      
-      {/* 1. Sidebar Component */}
       <Sidebar 
         isOpen={isSidebarOpen} 
         onClose={() => setIsSidebarOpen(false)} 
@@ -58,34 +72,25 @@ export default function DashboardPage() {
         userRole={userRole}
       />
 
-      {/* 2. Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        
-        {/* Header Component */}
-        {/* Pastikan Header Anda memiliki props onMenuClick untuk membuka sidebar di mobile */}
         <Header 
           onMenuClick={() => setIsSidebarOpen(true)} 
           activeMenu={activeMenu} 
         />
 
-        {/* Dynamic Content Rendering */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 lg:p-8 scroll-smooth">
-          {/* Animasi transisi ringan saat render */}
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             {renderContent()}
           </div>
         </main>
       </div>
 
-      {/* 3. Modal Logout */}
-      {/* Pastikan komponen ModalKeluar menerima isOpen dan onClose */}
       {isLogoutModalOpen && (
         <ModalKeluar 
           isOpen={isLogoutModalOpen} 
           onClose={() => setIsLogoutModalOpen(false)} 
         />
       )}
-      
     </div>
   );
 }

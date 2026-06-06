@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { 
   Mail, 
   Lock, 
@@ -17,40 +16,47 @@ import {
 export default function LoginPage() {
   const router = useRouter();
   
-  // State dengan strict typing bawaan React
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Penanganan submit dengan strict typing pada FormEvent
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      // Menggunakan environment variable untuk URL Backend
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://manufactured-down-contractors-jewel.trycloudflare.com';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
       
       const response = await axios.post(`${backendUrl}/api/auth/login`, {
         email,
         password
       });
 
-      // Backend me-return access_token dan object user
       const { access_token, user } = response.data;
 
-      // Menyimpan token dan informasi user ke dalam localStorage
+      // Menyimpan token dan informasi user ke dalam localStorage untuk UI
       localStorage.setItem('access_token', access_token);
       localStorage.setItem('user', JSON.stringify(user));
+
+      // PENTING: Menyimpan token ke Cookies agar terbaca oleh Middleware Next.js
+      document.cookie = `access_token=${access_token}; path=/; max-age=3600; Secure; SameSite=Lax`;
 
       // Redirect ke halaman dashboard saat sukses
       router.push('/dashboard');
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login failed', error);
-      // Anda bisa menggantinya dengan toast/notification bawaan Anda jika ada
-      const errorMessage = error.response?.data?.message || 'Terjadi kesalahan saat login';
+      
+      let errorMessage = 'Terjadi kesalahan saat login';
+      
+      // Mengecek apakah error berasal dari Axios untuk menghilangkan tipe 'any'
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || errorMessage;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
       alert(errorMessage); 
     } finally {
       setIsLoading(false);
