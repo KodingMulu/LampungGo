@@ -32,7 +32,9 @@ const recommendations = [
 
 {
       id: 2,
-      
+      title: 'Way Kambas',
+      rating: '4.7',
+      image: require('./assets/waykambas.png'),
 
     
 },
