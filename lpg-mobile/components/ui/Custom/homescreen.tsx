@@ -297,6 +297,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
   },
+  navText: {
+    fontSize: 11,
+    color: '#8E8E93',
+    marginTop: 4,
+    fontWeight: '500',
+  },
 });
         
       
