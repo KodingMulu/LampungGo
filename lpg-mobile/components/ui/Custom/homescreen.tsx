@@ -213,6 +213,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#333333',
   },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000000',
+    paddingHorizontal: 24,
+    marginTop: 15,
+    marginBottom: 15,
+  },
 });
         
       
