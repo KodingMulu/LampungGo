@@ -247,6 +247,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingRight: 8,
   },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
 });
         
       
