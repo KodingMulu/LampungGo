@@ -42,6 +42,15 @@ return (
     <SafeAreaView style={styles.container}>
       {/* MAIN CONTENT SCROLL VIEW */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}></ScrollView>
+
+      {/* HEADER */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Halo, Petualang!</Text>
+          <Image 
+            source={require('./assets/avatar.png')} // Ganti dengan avatar Anda
+            style={styles.avatar} 
+          />
+        </View>
       );
 
 }
