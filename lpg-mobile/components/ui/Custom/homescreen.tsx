@@ -278,6 +278,20 @@ const styles = StyleSheet.create({
     width: 24,
     backgroundColor: '#1A365D',
   },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 75,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    paddingBottom: 10,
+  },
 });
         
       
