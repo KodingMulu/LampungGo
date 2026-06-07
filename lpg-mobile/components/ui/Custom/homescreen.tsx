@@ -27,14 +27,14 @@ const recommendations = [
       id: 1,
       title: 'Pulau\nPahawang',
       rating: '4.8',
-      image: require('./assets/pahawang.png'),
+      image: require('../../../assets/images/pulaupahawang.png'),
 },
 
 {
       id: 2,
       title: 'Way Kambas',
       rating: '4.7',
-      image: require('./assets/waykambas.png'),
+      image: require('../../../assets/images/waykambas.jpg'),
 },
 ];
 
@@ -47,7 +47,7 @@ return (
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Halo, Petualang!</Text>
           <Image 
-            source={require('./assets/avatar.png')} // Sesuaikan dengan lokasi asset kamu
+            source={require('../../../assets/images/avatar1.jpg')} 
             style={styles.avatar} 
           />
         </View>
