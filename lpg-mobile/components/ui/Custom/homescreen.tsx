@@ -35,9 +35,13 @@ const recommendations = [
       title: 'Way Kambas',
       rating: '4.7',
       image: require('./assets/waykambas.png'),
-
-    
 },
 ];
+
+return (
+    <SafeAreaView style={styles.container}>
+      {/* MAIN CONTENT SCROLL VIEW */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}></ScrollView>
+      );
 
 }
