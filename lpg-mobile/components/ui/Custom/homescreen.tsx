@@ -224,6 +224,12 @@ const styles = StyleSheet.create({
   recommendationList: {
     paddingHorizontal: 24,
   },
+  recCard: {
+    width: width * 0.58,
+    height: width * 0.78,
+    marginRight: 16,
+    justifyContent: 'flex-end',
+  },
 });
         
       
