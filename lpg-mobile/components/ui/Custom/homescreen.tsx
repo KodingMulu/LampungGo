@@ -51,6 +51,16 @@ return (
             style={styles.avatar} 
           />
         </View>
+
+        {/* SEARCH BAR */}
+        <View style={styles.searchContainer}>
+          <TextInput 
+            placeholder="Cari pantai, kuliner, budaya..." 
+            placeholderTextColor="#8E8E93"
+            style={styles.searchInput}
+          />
+          <Ionicons name="search-outline" size={22} color="#1A365D" />
+        </View>
       );
 
 }
