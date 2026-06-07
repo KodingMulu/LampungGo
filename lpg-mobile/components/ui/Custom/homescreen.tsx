@@ -140,7 +140,14 @@ return (
           <Ionicons name="heart-outline" size={24} color="#8E8E93" />
           <Text style={styles.navText}>Simpan</Text>
         </TouchableOpacity>
-        
-      );
 
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="person-outline" size={24} color="#8E8E93" />
+          <Text style={styles.navText}>Profil</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 }
+        
+      
