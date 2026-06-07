@@ -176,6 +176,16 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 22.5,
   },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F3F5',
+    borderRadius: 25,
+    paddingHorizontal: 16,
+    height: 50,
+    marginHorizontal: 24,
+    marginTop: 20,
+  },
 });
         
       
