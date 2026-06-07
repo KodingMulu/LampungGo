@@ -122,6 +122,14 @@ return (
         </View>
 
       </ScrollView>
+
+      {/* BOTTOM NAVIGATION BAR */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="home" size={24} color="#1A365D" />
+          <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
+          <View style={styles.activeIndicator} />
+        </TouchableOpacity>
         
       );
 
