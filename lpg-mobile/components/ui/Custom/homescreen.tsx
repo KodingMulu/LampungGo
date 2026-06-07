@@ -267,6 +267,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#E5E7EB',
+    marginHorizontal: 3,
+  },
 });
         
       
