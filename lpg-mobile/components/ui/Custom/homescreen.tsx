@@ -208,6 +208,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  categoryLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#333333',
+  },
 });
         
       
