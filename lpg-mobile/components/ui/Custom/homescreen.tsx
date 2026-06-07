@@ -195,6 +195,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 25,
     height: 100,
+  },
+  categoryCard: {
+    alignItems: 'center',
+    marginRight: 20,
   },  
 });
         
