@@ -292,6 +292,11 @@ const styles = StyleSheet.create({
     borderTopColor: '#F3F4F6',
     paddingBottom: 10,
   },
+  navItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
 });
         
       
