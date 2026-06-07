@@ -307,7 +307,16 @@ const styles = StyleSheet.create({
     color: '#1A365D',
     fontWeight: 'bold',
   },
-  
+  activeIndicator: {
+    position: 'absolute',
+    top: -12,
+    width: 40,
+    height: 3,
+    backgroundColor: '#1A365D',
+    borderBottomLeftRadius: 2,
+    borderBottomRightRadius: 2,
+  }
 });
+
         
       
