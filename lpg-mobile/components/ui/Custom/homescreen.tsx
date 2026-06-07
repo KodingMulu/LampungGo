@@ -67,7 +67,22 @@ return (
           horizontal 
           showsHorizontalScrollIndicator={false} 
           contentContainerStyle={styles.categoriesContainer}
-        ></ScrollView>
+        >
+          {categories.map((item) => (
+            <TouchableOpacity key={item.id} style={styles.categoryCard}>
+              <View style={[styles.iconWrapper, { backgroundColor: item.color }]}>
+                {item.type === 'font-awesome' ? (
+                  <FontAwesome5 name="hamburger" size={24} color={item.iconColor} />
+                ) : item.type === 'material' ? (
+                  <MaterialCommunityIcons name="office-building" size={24} color={item.iconColor} />
+                ) : (
+                  <FontAwesome5 name={item.icon} size={22} color={item.iconColor} />
+                )}
+              </View>
+              <Text style={styles.categoryLabel}>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       );
 
 }
