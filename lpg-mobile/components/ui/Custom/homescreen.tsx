@@ -86,6 +86,15 @@ return (
         
         {/* SECTION TITLE */}
         <Text style={styles.sectionTitle}>Rekomendasi Utama</Text>
+
+        {/* CAROUSEL / RECOMMENDATION CARDS */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={styles.recommendationList}
+          snapToInterval={width * 0.65 + 16}
+          decelerationRate="fast"
+        ></ScrollView>
       );
 
 }
