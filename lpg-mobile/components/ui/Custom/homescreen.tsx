@@ -36,6 +36,13 @@ const recommendations = [
       rating: '4.7',
       image: require('../../../assets/images/waykambas.jpg'),
 },
+
+{
+      id: 3,
+      title: 'pantai marina',
+      rating: '4.7',
+      image: require('../../../assets/images/marina.jpg'),
+},
 ];
 
 return (
@@ -224,8 +231,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   recCard: {
-    width: width * 0.58,
-    height: width * 0.78,
+    width: 160,
+    height:215,
     marginRight: 16,
     justifyContent: 'flex-end',
   },
