@@ -101,7 +101,18 @@ return (
               source={item.image} 
               style={styles.recCard}
               imageStyle={{ borderRadius: 24 }}
-            ></ImageBackground>
+            >
+              
+              <View style={styles.cardGradient}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <View style={styles.ratingContainer}>
+                  <Ionicons name="star" size={14} color="#D9A74A" />
+                  <Text style={styles.ratingText}>{item.rating}</Text>
+                </View>
+              </View>
+            </ImageBackground>
+          ))}
+        </ScrollView>
         
       );
 
