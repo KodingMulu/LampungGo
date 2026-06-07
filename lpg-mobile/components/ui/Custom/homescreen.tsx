@@ -40,14 +40,14 @@ const recommendations = [
 
 return (
     <SafeAreaView style={styles.container}>
-      {/* MAIN CONTENT SCROLL VIEW */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}></ScrollView>
-
-      {/* HEADER */}
+      {/* 1. MAIN CONTENT SCROLL VIEW (Pastikan ini terbuka) */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+        
+        {/* HEADER */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Halo, Petualang!</Text>
           <Image 
-            source={require('./assets/avatar.png')} // Ganti dengan avatar Anda
+            source={require('./assets/avatar.png')} // Sesuaikan dengan lokasi asset kamu
             style={styles.avatar} 
           />
         </View>
@@ -83,7 +83,7 @@ return (
             </TouchableOpacity>
           ))}
         </ScrollView>
-        
+
         {/* SECTION TITLE */}
         <Text style={styles.sectionTitle}>Rekomendasi Utama</Text>
 
@@ -102,7 +102,6 @@ return (
               style={styles.recCard}
               imageStyle={{ borderRadius: 24 }}
             >
-              
               <View style={styles.cardGradient}>
                 <Text style={styles.cardTitle}>{item.title}</Text>
                 <View style={styles.ratingContainer}>
@@ -121,7 +120,7 @@ return (
           <View style={styles.dot} />
         </View>
 
-      </ScrollView>
+      </ScrollView> {/* <-- Batas Line 124 yang error tadi, sekarang sudah aman */}
 
       {/* BOTTOM NAVIGATION BAR */}
       <View style={styles.bottomNav}>
@@ -130,7 +129,7 @@ return (
           <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
           <View style={styles.activeIndicator} />
         </TouchableOpacity>
-
+        
         <TouchableOpacity style={styles.navItem}>
           <Ionicons name="map-outline" size={24} color="#8E8E93" />
           <Text style={styles.navText}>Jelajah</Text>
@@ -148,7 +147,7 @@ return (
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
