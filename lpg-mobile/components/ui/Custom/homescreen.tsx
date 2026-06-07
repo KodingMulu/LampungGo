@@ -29,6 +29,13 @@ const recommendations = [
       rating: '4.8',
       image: require('./assets/pahawang.png'),
 },
+
+{
+      id: 2,
+      
+
+    
+},
 ];
 
 }
