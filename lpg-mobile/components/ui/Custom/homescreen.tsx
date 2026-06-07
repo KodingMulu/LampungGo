@@ -61,6 +61,13 @@ return (
           />
           <Ionicons name="search-outline" size={22} color="#1A365D" />
         </View>
+
+        {/* CATEGORIES SECTION */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={styles.categoriesContainer}
+        ></ScrollView>
       );
 
 }
