@@ -94,7 +94,15 @@ return (
           contentContainerStyle={styles.recommendationList}
           snapToInterval={width * 0.65 + 16}
           decelerationRate="fast"
-        ></ScrollView>
+        >
+          {recommendations.map((item) => (
+            <ImageBackground 
+              key={item.id} 
+              source={item.image} 
+              style={styles.recCard}
+              imageStyle={{ borderRadius: 24 }}
+            ></ImageBackground>
+        
       );
 
 }
