@@ -149,5 +149,7 @@ return (
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({});
         
       
