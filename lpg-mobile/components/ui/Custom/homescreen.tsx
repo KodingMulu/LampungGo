@@ -171,6 +171,11 @@ const styles = StyleSheet.create({
     color: '#000000',
     letterSpacing: -0.5,
   },
+  avatar: {
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+  },
 });
         
       
