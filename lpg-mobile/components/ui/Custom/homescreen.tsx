@@ -186,6 +186,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 20,
   },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#000000',
+  },
 });
         
       
