@@ -191,6 +191,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
   },
+  categoriesContainer: {
+    paddingHorizontal: 24,
+    marginTop: 25,
+    height: 100,
+  },  
 });
         
       
