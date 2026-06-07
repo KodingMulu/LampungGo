@@ -303,6 +303,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontWeight: '500',
   },
+  activeNavText: {
+    color: '#1A365D',
+    fontWeight: 'bold',
+  },
+  
 });
         
       
