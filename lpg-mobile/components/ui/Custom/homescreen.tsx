@@ -130,6 +130,11 @@ return (
           <Text style={[styles.navText, styles.activeNavText]}>Home</Text>
           <View style={styles.activeIndicator} />
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="map-outline" size={24} color="#8E8E93" />
+          <Text style={styles.navText}>Jelajah</Text>
+        </TouchableOpacity>
         
       );
 
