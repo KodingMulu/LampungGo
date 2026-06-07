@@ -200,6 +200,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 20,
   },  
+  iconWrapper: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
 });
         
       
