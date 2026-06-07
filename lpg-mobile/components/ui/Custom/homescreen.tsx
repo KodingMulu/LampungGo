@@ -83,6 +83,9 @@ return (
             </TouchableOpacity>
           ))}
         </ScrollView>
+        
+        {/* SECTION TITLE */}
+        <Text style={styles.sectionTitle}>Rekomendasi Utama</Text>
       );
 
 }
