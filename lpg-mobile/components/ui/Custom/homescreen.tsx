@@ -165,6 +165,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 20,
   },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#000000',
+    letterSpacing: -0.5,
+  },
 });
         
       
