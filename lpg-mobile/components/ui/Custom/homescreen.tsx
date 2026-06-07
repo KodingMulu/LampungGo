@@ -113,6 +113,15 @@ return (
             </ImageBackground>
           ))}
         </ScrollView>
+
+        {/* PAGINATION DOTS */}
+        <View style={styles.paginationContainer}>
+          <View style={[styles.dot, styles.activeDot]} />
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+        </View>
+
+      </ScrollView>
         
       );
 
