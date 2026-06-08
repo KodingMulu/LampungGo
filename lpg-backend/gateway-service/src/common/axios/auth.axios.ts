@@ -1,0 +1,6 @@
+import { createServiceApi } from './axios.factory';
+
+export const auth_api = createServiceApi(
+  process.env.AUTH_SERVICE_URL,
+  'Auth Service',
+);
